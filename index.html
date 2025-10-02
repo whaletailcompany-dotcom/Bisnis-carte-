@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>مولد بطاقات عمل — فلاير — سيرة ذاتية (احترافي)</title>
+
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#f2f6fb; --panel:#fff; --muted:#6b7280; --accent:#0b84ff;
+    }
+    body{font-family: "Segoe UI", Tahoma, Arial, "Noto Naskh Arabic", sans-serif;background:var(--bg);margin:12px;color:#111;direction:rtl;}
+    .wrap{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 440px;gap:14px;align-items:start;}
+    header{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+    header h1{font-size:18px;margin:0}
+    .panel{background:var(--panel);padding:14px;border-radius:10px;box-shadow:0 10px 30px rgba(11,20,40,0.06);}
+    form .row{display:flex;gap:8px;margin-bottom:8px}
+    label{display:block;font-weight:700;margin-bottom:6px;font-size:13px}
+    input[type="text"],input[type="email"],input[type="tel"],textarea,select{width:100%;padding:8px;border-radius:8px;border:1px solid #e6e9f0;font-size:13px;background:#fff}
+    textarea{min-height:76px;resize:vertical}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    button{padding:8px 12px;border-radius:8px;border:0;background:var(--accent);color:#fff;font-weight:700;cursor:pointer}
+    button.ghost{background:#fff;border:1px solid #e6e9f0;color:#111}
+    .small{font-size:12px;color:var(--muted)}
+    /* previews */
+    .preview{display:flex;flex-direction:column;gap:12px;align-items:center}
+    .card-preview{border-radius:8px;overflow:hidden;box-shadow:0 10px 30px rgba(11,20,40,0.08);background:#fff;width:340px;height:190px;display:flex;flex-direction:column;justify-content:space-between;padding:12px;box-sizing:border-box}
+    .card-inner{display:flex;justify-content:space-between;align-items:flex-start}
+    .logo-circle{width:56px;height:56px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+    .name{font-weight:800;font-size:16px}
+    .title{color:var(--muted);font-size:12px;margin-top:4px}
+    .contacts{display:flex;flex-direction:column;gap:4px;color:var(--muted);font-size:12px;text-align:left}
+    .photo{width:56px;height:56px;border-radius:999px;background:#e9eef8;display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:700}
+    .back-preview{display:flex;align-items:center;justify-content:center;height:100%;font-weight:700;color:#fff}
+    .tpl-modern{background:linear-gradient(135deg,#0b84ff,#7bd3ff);color:#fff}
+    .tpl-classic{background:#fff;color:#111;border:1px solid #eaeaf3}
+    .tpl-elegant{background:linear-gradient(135deg,#0e1014,#2b4353);color:#f8f5ee}
+    .tpl-colorful{background:linear-gradient(135deg,#ff8a00,#ff4d6d);color:#fff}
+    .tpl-bw{background:#fff;color:#111;border:2px solid #111}
+    /* flyer */
+    .flyer{width:300px;height:420px;border-radius:8px;padding:14px;box-sizing:border-box;overflow:hidden;position:relative}
+    .flyer h2{margin:6px 0}
+    /* CV */
+    .cv{width:300px;background:#fff;border-radius:8px;padding:12px;box-sizing:border-box}
+    /* responsive */
+    @media (max-width:980px){ .wrap{grid-template-columns:1fr} .preview{order:2} }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>⚡ مُولد بطاقات العمل — الفلاير — والسيرة الذاتية</h1>
+        <div class="small">استخرج PNG/PDF للطباعة الاحترافية مع خيار Bleed (3mm) وحفظ ZIP بكل الملفات.</div>
+      </div>
+      <div class="small">افتح الملف في المتصفح — لا يحتاج سيرفر</div>
+    </header>
+
+    <!-- Form -->
+    <div class="panel">
+      <form id="form" onsubmit="return false;">
+        <div class="row">
+          <div style="flex:1">
+            <label>👤 الاسم الكامل</label>
+            <input id="name" type="text" placeholder="مثال: محمد بن علي">
+          </div>
+          <div style="width:170px">
+            <label>💼 المسمى الوظيفي</label>
+            <input id="job" type="text" placeholder="مثال: مطور واجهات أمامية">
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1">
+            <label>📧 البريد الإلكتروني</label>
+            <input id="email" type="email" placeholder="example@email.com">
+          </div>
+          <div style="width:170px">
+            <label>📱 رقم الهاتف</label>
+            <input id="phone" type="tel" placeholder="+966 xx xxx xxxx">
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1">
+            <label>📍 الموقع</label>
+            <input id="location" type="text" placeholder="المدينة، الدولة">
+          </div>
+          <div style="width:170px">
+            <label>🔗 موقع / لينكدإن</label>
+            <input id="website" type="text" placeholder="linkedin.com/in/yourname">
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1">
+            <label>📝 الملخص المهني</label>
+            <textarea id="summary" placeholder="سطران عن خبراتك ومهاراتك"></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1">
+            <label>⚡ المهارات (مفصولة بفواصل)</label>
+            <input id="skills" type="text" placeholder="HTML, CSS, JavaScript, React">
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1">
+            <label>📷 الصورة الشخصية (اختياري)</label>
+            <input id="photo" type="file" accept="image/*">
+          </div>
+          <div style="width:170px">
+            <label>🖼️ شعار / لوجو (اختياري)</label>
+            <input id="logo" type="file" accept="image/*">
+          </div>
+        </div>
+
+        <hr style="margin:10px 0;border:0;border-top:1px dashed #eee">
+
+        <div class="row">
+          <div style="flex:1">
+            <label>قالب البطاقة</label>
+            <select id="template">
+              <option value="modern">عصري (ملون)</option>
+              <option value="classic">كلاسيكي (نظيف)</option>
+              <option value="elegant">أنيق (غامق)</option>
+              <option value="colorful">ملون</option>
+              <option value="bw">أبيض وأسود</option>
+            </select>
+          </div>
+          <div style="width:170px">
+            <label>مقاس البطاقة</label>
+            <select id="cardSize">
+              <option value="90x50">9 × 5 سم</option>
+              <option value="85x55">8.5 × 5.5 سم (قياسي)</option>
+              <option value="90x54">9 × 5.4 سم</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1">
+            <label>مقاس الفلاير</label>
+            <select id="flyerSize">
+              <option value="A4">A4</option>
+              <option value="A5">A5</option>
+            </select>
+          </div>
+          <div style="width:170px">
+            <label>خيارات الطباعة</label>
+            <select id="bleedOption">
+              <option value="no">بدون Bleed</option>
+              <option value="3">Bleed = 3mm (مستحسن للطباعة)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+          <button type="button" onclick="updateAll()">🔄 معاينة</button>
+          <button type="button" onclick="downloadCardPDF()">⬇️ تنزيل بطاقة (PDF)</button>
+          <button type="button" onclick="downloadCardPNG()">⬇️ تنزيل بطاقة (PNG)</button>
+          <button type="button" onclick="downloadFlyerPDF()">⬇️ تنزيل فلاير (PDF)</button>
+          <button type="button" onclick="downloadCVPDF()">⬇️ تنزيل سيرة ذاتية (PDF)</button>
+          <button type="button" onclick="exportZIP()">📦 تنزيل ZIP (كل الملفات)</button>
+          <button type="button" class="ghost" onclick="resetForm()">🗑️ مسح الكل</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Preview panel -->
+    <aside class="panel preview">
+      <div style="width:100%;display:flex;justify-content:space-between;align-items:center">
+        <strong>معاينة البطاقة</strong>
+        <div class="small">اضغط "معاينة" بعد التغيير</div>
+      </div>
+
+      <div id="cardFront" class="card-preview tpl-modern">
+        <div class="card-inner">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div id="logoBox" class="logo-circle">شع</div>
+            <div>
+              <div class="name" id="prName">الاسم الكامل</div>
+              <div class="title" id="prJob">المسمى الوظيفي</div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="contacts" id="prContacts">
+              <div id="prEmail">📧 example@email.com</div>
+              <div id="prPhone">📱 +966 ...</div>
+              <div id="prLocation">📍 المدينة</div>
+            </div>
+            <div id="prPhoto" class="photo">صورة</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button onclick="toggleSide('front')">أمامي</button>
+        <button onclick="toggleSide('back')">خلفي</button>
+      </div>
+
+      <div id="cardBack" style="display:none;margin-top:8px" class="card-preview tpl-modern back-preview">
+        <div>
+          <div id="backBig" style="font-size:18px;font-weight:800">اسم / شركة</div>
+          <div id="backSmall" class="small" style="margin-top:6px">معلومات إضافية • موقع • خدمات</div>
+        </div>
+      </div>
+
+      <hr style="width:100%;margin:12px 0;border:0;border-top:1px dashed #eee">
+
+      <div style="width:100%">
+        <strong>معاينة الفلاير</strong>
+        <div id="flyerPreview" class="flyer tpl-modern" style="margin-top:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="small">✨ خدمات</div>
+              <h2 id="flyerName">اسمك — المسمى الوظيفي</h2>
+              <div id="flyerSummary" class="small">شرح بسيط عن خدماتك أو عرضك</div>
+            </div>
+            <div id="flyerLogo" style="width:72px;height:72px;border-radius:10px;background:rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-weight:800">لج</div>
+          </div>
+          <div style="position:absolute;bottom:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:12px">
+            <div id="flyerContact">📧 — 📱 — 📍</div>
+            <div>مولد البطاقة</div>
+          </div>
+        </div>
+      </div>
+
+      <hr style="width:100%;margin:12px 0;border:0;border-top:1px dashed #eee">
+
+      <div style="width:100%">
+        <strong>معاينة السيرة الذاتية</strong>
+        <div id="cvPreview" class="cv" style="margin-top:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-weight:800" id="cvName">الاسم الكامل</div>
+              <div class="small" id="cvJob">المسمى الوظيفي</div>
+            </div>
+            <div id="cvPhoto" style="width:64px;height:64px;border-radius:8px;background:#e9eef8;display:flex;align-items:center;justify-content:center">صورة</div>
+          </div>
+          <div style="margin-top:10px">
+            <div style="font-weight:700">الملخص</div>
+            <div class="small" id="cvSummary">ملخص قصير عنك يظهر هنا</div>
+          </div>
+          <div style="margin-top:10px">
+            <div style="font-weight:700">المهارات</div>
+            <div class="small" id="cvSkills">HTML, CSS, JavaScript</div>
+          </div>
+          <div style="margin-top:10px">
+            <div style="font-weight:700">الخبرات</div>
+            <div class="small" id="cvExp">مطور واجهات أمامية — شركة مثال (2022-حتى الآن)</div>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+<script>
+/* ===================== Utilities ===================== */
+const mmPerCm = 10;
+const pxPerCmAt96 = 37.79; // approx px/cm for preview scaling
+const bleedDefault = 3; // mm
+
+// DOM refs
+const inputs = {
+  name: document.getElementById('name'),
+  job: document.getElementById('job'),
+  email: document.getElementById('email'),
+  phone: document.getElementById('phone'),
+  location: document.getElementById('location'),
+  website: document.getElementById('website'),
+  summary: document.getElementById('summary'),
+  skills: document.getElementById('skills'),
+  photo: document.getElementById('photo'),
+  logo: document.getElementById('logo'),
+  template: document.getElementById('template'),
+  cardSize: document.getElementById('cardSize'),
+  flyerSize: document.getElementById('flyerSize'),
+  bleedOption: document.getElementById('bleedOption'),
+};
+
+// preview elements
+const prName = document.getElementById('prName');
+const prJob = document.getElementById('prJob');
+const prEmail = document.getElementById('prEmail');
+const prPhone = document.getElementById('prPhone');
+const prLocation = document.getElementById('prLocation');
+const prPhoto = document.getElementById('prPhoto');
+const logoBox = document.getElementById('logoBox');
+const cardFront = document.getElementById('cardFront');
+const cardBack = document.getElementById('cardBack');
+const backBig = document.getElementById('backBig');
+const backSmall = document.getElementById('backSmall');
+
+const flyerPreview = document.getElementById('flyerPreview');
+const flyerName = document.getElementById('flyerName');
+const flyerSummary = document.getElementById('flyerSummary');
+const flyerLogo = document.getElementById('flyerLogo');
+const flyerContact = document.getElementById('flyerContact');
+
+const cvPreview = document.getElementById('cvPreview');
+const cvNamePr = document.getElementById('cvName');
+const cvJobPr = document.getElementById('cvJob');
+const cvSummaryPr = document.getElementById('cvSummary');
+const cvSkillsPr = document.getElementById('cvSkills');
+const cvExpPr = document.getElementById('cvExp');
+const cvPhoto = document.getElementById('cvPhoto');
+
+function getImageFromFile(file){
+  return new Promise((res, rej) => {
+    if (!file) return res(null);
+    const reader = new FileReader();
+    reader.onload = () => res(reader.result);
+    reader.onerror = rej;
+    reader.readAsDataURL(file);
+  });
+}
+
+function getInitials(name){
+  if(!name) return 'شع';
+  const parts = name.trim().split(/\s+/);
+  if(parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+  return (parts[0][0] + parts[parts.length-1][0]).toUpperCase();
+}
+
+/* ===================== Update Preview ===================== */
+async function updateAll(){
+  // apply template classes
+  const tpl = inputs.template.value;
+  const classes = ['tpl-modern','tpl-classic','tpl-elegant','tpl-colorful','tpl-bw'];
+  cardFront.classList.remove(...classes);
+  cardBack.classList.remove(...classes);
+  flyerPreview.classList.remove(...classes);
+  if(tpl === 'modern') cardFront.classList.add('tpl-modern'), cardBack.classList.add('tpl-modern'), flyerPreview.classList.add('tpl-modern');
+  if(tpl === 'classic') cardFront.classList.add('tpl-classic'), cardBack.classList.add('tpl-classic'), flyerPreview.classList.add('tpl-classic');
+  if(tpl === 'elegant') cardFront.classList.add('tpl-elegant'), cardBack.classList.add('tpl-elegant'), flyerPreview.classList.add('tpl-elegant');
+  if(tpl === 'colorful') cardFront.classList.add('tpl-colorful'), cardBack.classList.add('tpl-colorful'), flyerPreview.classList.add('tpl-colorful');
+  if(tpl === 'bw') cardFront.classList.add('tpl-bw'), cardBack.classList.add('tpl-bw'), flyerPreview.classList.add('tpl-bw');
+
+  // set sizes (preview uses px scaling for better visual proportions)
+  const size = inputs.cardSize.value.split('x').map(n => parseFloat(n)); // cm
+  const wPx = Math.round(size[0] * pxPerCmAt96);
+  const hPx = Math.round(size[1] * pxPerCmAt96);
+  cardFront.style.width = wPx + 'px';
+  cardFront.style.height = hPx + 'px';
+  cardBack.style.width = wPx + 'px';
+  cardBack.style.height = hPx + 'px';
+
+  // content
+  prName.textContent = inputs.name.value || 'الاسم الكامل';
+  prJob.textContent = inputs.job.value || 'المسمى الوظيفي';
+  prEmail.textContent = inputs.email.value ? '📧 ' + inputs.email.value : '📧 البريد';
+  prPhone.textContent = inputs.phone.value ? '📱 ' + inputs.phone.value : '📱 الهاتف';
+  prLocation.textContent = inputs.location.value ? '📍 ' + inputs.location.value : '📍 الموقع';
+  backBig.textContent = inputs.name.value || 'الاسم أو الشركة';
+  backSmall.textContent = (inputs.job.value || '') + (inputs.website.value ? ' • ' + inputs.website.value : '');
+
+  flyerName.textContent = (inputs.name.value ? inputs.name.value + ' — ' : '') + (inputs.job.value || 'مسمى وظيفي');
+  flyerSummary.textContent = inputs.summary.value || 'سطر أو سطرين يصفان خدماتك.';
+  flyerContact.textContent = `${inputs.email.value ? '📧 ' + inputs.email.value : ''} ${inputs.phone.value ? ' • 📱 ' + inputs.phone.value : ''} ${inputs.location.value ? ' • 📍 ' + inputs.location.value : ''}`;
+
+  cvNamePr.textContent = inputs.name.value || 'الاسم الكامل';
+  cvJobPr.textContent = inputs.job.value || 'المسمى الوظيفي';
+  cvSummaryPr.textContent = inputs.summary.value || 'الملخص المهني يظهر هنا ...';
+  cvSkillsPr.textContent = inputs.skills.value || 'مهارة A, مهارة B';
+  cvExpPr.textContent = 'مثال: مطور — شركة مثال (2022 - الآن)';
+
+  // image files
+  const logoFile = inputs.logo.files[0];
+  const photoFile = inputs.photo.files[0];
+
+  const logoSrc = await getImageFromFile(logoFile);
+  const photoSrc = await getImageFromFile(photoFile);
+
+  if(logoSrc){
+    logoBox.innerHTML = `<img src="${logoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`;
+    flyerLogo.innerHTML = `<img src="${logoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`;
+  } else {
+    const letters = getInitials(inputs.name.value || 'شعار');
+    logoBox.textContent = letters;
+    flyerLogo.textContent = letters;
+  }
+
+  if(photoSrc){
+    prPhoto.innerHTML = `<img src="${photoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:999px">`;
+    cvPhoto.innerHTML = `<img src="${photoSrc}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">`;
+  } else {
+    prPhoto.textContent = 'صورة';
+    cvPhoto.textContent = 'صورة';
+  }
+}
+
+/* ===================== Side toggle ===================== */
+function toggleSide(side){
+  if(side === 'front'){ cardFront.style.display='block'; cardBack.style.display='none'; }
+  else { cardFront.style.display='none'; cardBack.style.display='block'; }
+}
+
+/* ===================== Rendering utilities (html2canvas) ===================== */
+async function renderElementToCanvas(el, scale=3){
+  // clone element to avoid layout shifts (keeps computed styles)
+  const clone = el.cloneNode(true);
+  clone.style.transform = 'scale(1)';
+  clone.style.position = 'fixed';
+  clone.style.top = '-9999px';
+  clone.style.left = '-9999px';
+  clone.style.zIndex = '9999';
+  document.body.appendChild(clone);
+  const canvas = await html2canvas(clone, {scale: scale, useCORS: true, backgroundColor: null, logging:false});
+  document.body.removeChild(clone);
+  return canvas;
+}
+
+/* ===================== PDF helpers ===================== */
+function cmToMm(cm){ return cm * mmPerCm; }
+function addImageToPdf(pdf, imgDataUrl, xMm, yMm, wMm, hMm){
+  pdf.addImage(imgDataUrl, 'PNG', xMm, yMm, wMm, hMm);
+}
+
+/* ===================== Export functions ===================== */
+async function downloadCardPNG(){
+  await updateAll();
+  // pick visible side (front or back)
+  const visible = (cardFront.style.display === 'none') ? cardBack : cardFront;
+  const canvas = await renderElementToCanvas(visible, 4);
+  const blob = await new Promise(res => canvas.toBlob(res, 'image/png', 1));
+  const filename = (inputs.name.value ? inputs.name.value.replace(/\s+/g,'_') : 'business_card') + '.png';
+  saveAs(blob, filename);
+}
+
+async function downloadCardPDF(){
+  await updateAll();
+  // size from select (cm)
+  const [wCm, hCm] = inputs.cardSize.value.split('x').map(x => parseFloat(x));
+  const bleed = inputs.bleedOption.value === '3' ? bleedDefault : 0;
+  const pdfW = cmToMm(wCm) + (bleed * 2); // mm
+  const pdfH = cmToMm(hCm) + (bleed * 2); // mm
+
+  // capture front and back as canvases
+  const frontCanvas = await renderElementToCanvas(cardFront, 4);
+  const backCanvas = await renderElementToCanvas(cardBack, 4);
+
+  const frontData = frontCanvas.toDataURL('image/png');
+  const backData = backCanvas.toDataURL('image/png');
+
+  const { jsPDF } = window.jspdf;
+  const orientation = pdfW > pdfH ? 'landscape' : 'portrait';
+  const pdf = new jsPDF({unit:'mm', format:[pdfW,pdfH], orientation: orientation});
+
+  // Add front (centered accounting for bleed: put image at bleed offset)
+  addImageToPdf(pdf, frontData, bleed, bleed, cmToMm(wCm), cmToMm(hCm));
+
+  // Add crop marks / second page: add back as second page
+  pdf.addPage([pdfW,pdfH], orientation);
+  addImageToPdf(pdf, backData, bleed, bleed, cmToMm(wCm), cmToMm(hCm));
+
+  const filename = (inputs.name.value ? inputs.name.value.replace(/\s+/g,'_') : 'business_card') + '.pdf';
+  pdf.save(filename);
+}
+
+async function downloadFlyerPDF(){
+  await updateAll();
+  // set mm dims
+  const size = inputs.flyerSize.value === 'A5' ? {w:148,h:210} : {w:210,h:297}; // A4 default
+  const bleed = inputs.bleedOption.value === '3' ? bleedDefault : 0;
+  const pdfW = size.w + bleed * 2;
+  const pdfH = size.h + bleed * 2;
+
+  // render flyer
+  const canvas = await renderElementToCanvas(flyerPreview, 4);
+  const data = canvas.toDataURL('image/png');
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({unit:'mm', format:[pdfW,pdfH]});
+  addImageToPdf(pdf, data, bleed, bleed, size.w, size.h);
+
+  const filename = (inputs.name.value ? inputs.name.value.replace(/\s+/g,'_') : 'flyer') + '.pdf';
+  pdf.save(filename);
+}
+
+async function downloadCVPDF(){
+  await updateAll();
+  // we'll render cvPreview into an A4 portrait PDF (fit width 210mm - margins)
+  const canvas = await renderElementToCanvas(cvPreview, 4);
+  const img = canvas.toDataURL('image/png');
+
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({unit:'mm', format:'a4'});
+  const pageW = 210, pageH = 297;
+  // fit width with margins 20mm each side
+  const margin = 12;
+  const availableW = pageW - margin * 2;
+  // compute image size to fit
+  // get image ratio
+  const imgW = canvas.width;
+  const imgH = canvas.height;
+  const ratio = imgH / imgW;
+  const drawW = availableW;
+  const drawH = drawW * ratio * 0.8; // small scaling to fit multiple sections (conservative)
+  const x = margin;
+  const y = margin;
+  pdf.addImage(img, 'PNG', x, y, drawW, drawH);
+  const filename = (inputs.name.value ? inputs.name.value.replace(/\s+/g,'_') : 'cv') + '.pdf';
+  pdf.save(filename);
+}
+
+/* ===================== ZIP export (all files) ===================== */
+async function exportZIP(){
+  await updateAll();
+  const zip = new JSZip();
+
+  // 1) Card front PNG + PDF
+  const [wCm, hCm] = inputs.cardSize.value.split('x').map(x => parseFloat(x));
+  const bleed = inputs.bleedOption.value === '3' ? bleedDefault : 0;
+  const pdfW = cmToMm(wCm) + bleed * 2;
+  const pdfH = cmToMm(hCm) + bleed * 2;
+
+  // render canvases
+  const frontCanvas = await renderElementToCanvas(cardFront, 4);
+  const backCanvas = await renderElementToCanvas(cardBack, 4);
+  const flyerCanvas = await renderElementToCanvas(flyerPreview, 4);
+  const cvCanvas = await renderElementToCanvas(cvPreview, 4);
+
+  // add front PNG
+  const frontBlob = await new Promise(res => frontCanvas.toBlob(res, 'image/png', 1));
+  zip.file('card_front.png', frontBlob);
+
+  // add back PNG
+  const backBlob = await new Promise(res => backCanvas.toBlob(res, 'image/png', 1));
+  zip.file('card_back.png', backBlob);
+
+  // add front PDF and back PDF (single file with two pages)
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({unit:'mm', format:[pdfW,pdfH]});
+  pdf.addImage(frontCanvas.toDataURL('image/png'), 'PNG', bleed, bleed, cmToMm(wCm), cmToMm(hCm));
+  pdf.addPage([pdfW,pdfH]);
+  pdf.addImage(backCanvas.toDataURL('image/png'), 'PNG', bleed, bleed, cmToMm(wCm), cmToMm(hCm));
+  const pdfBlob = pdf.output('blob');
+  zip.file('business_card_front_back.pdf', pdfBlob);
+
+  // add flyer PDF
+  const flyerSize = inputs.flyerSize.value === 'A5' ? {w:148,h:210} : {w:210,h:297};
+  const flyerPdf = new jsPDF({unit:'mm', format:[flyerSize.w + bleed * 2, flyerSize.h + bleed * 2]});
+  flyerPdf.addImage(flyerCanvas.toDataURL('image/png'), 'PNG', bleed, bleed, flyerSize.w, flyerSize.h);
+  zip.file('flyer.pdf', flyerPdf.output('blob'));
+
+  // add CV PDF (A4)
+  const cvPdf = new jsPDF({unit:'mm', format:'a4'});
+  // scale cvCanvas to available width with margin
+  const pageW = 210, margin = 12;
+  const availableW = pageW - margin * 2;
+  const imgRatio = cvCanvas.height / cvCanvas.width;
+  const drawW = availableW;
+  const drawH = drawW * imgRatio;
+  cvPdf.addImage(cvCanvas.toDataURL('image/png'), 'PNG', margin, margin, drawW, drawH);
+  zip.file('cv.pdf', cvPdf.output('blob'));
+
+  // finalize
+  const content = await zip.generateAsync({type:'blob'});
+  const base = inputs.name.value ? inputs.name.value.replace(/\s+/g,'_') : 'export';
+  saveAs(content, `${base}_cards_flyer_cv.zip`);
+}
+
+/* ===================== Reset ===================== */
+function resetForm(){
+  document.getElementById('form').reset();
+  // reset previews to defaults
+  updateAll();
+}
+
+/* ===================== Initialize ===================== */
+updateAll();
+
+// attach quick autosave preview when inputs change
+const watched = ['name','job','email','phone','location','website','summary','skills','template','cardSize','flyerSize','bleedOption'];
+watched.forEach(id => {
+  document.getElementById(id).addEventListener('input', () => { /* no spam */ });
+  document.getElementById(id).addEventListener('change', updateAll);
+});
+['photo','logo'].forEach(id=>{
+  document.getElementById(id).addEventListener('change', updateAll);
+});
+</script>
+</body>
+</html>

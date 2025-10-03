@@ -285,20 +285,41 @@ async function exportZIP(){
 // 🌍 جلب IP
 async function getIPAddress(){ try{ const r=await fetch("https://api.ipify.org?format=json"); const d=await r.json(); showToast("🌍 IP: "+d.ip);}catch{ showToast("❌ خطأ بجلب IP"); } }
 
-// 🤖 ذكاء اصطناعي
-const AI_HOST="http://YOUR_IP:8000";
-function buildPrompt(job){ return `Professional business card / flyer background for "${job}"`; }
+// 🤖 ذكاء اصطناعي باستخدام OpenAI
+const OPENAI_API_KEY = "ضع_مفتاحك_هنا"; // ⚠️ استبدلها بـ API Key الخاص بك
+
 async function generateAIImage(job){
   try{
-    showToast("⏳ جاري التوليد...");
-    const r=await fetch(`${AI_HOST}/generate`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt:buildPrompt(job),width:1200,height:700})});
-    const d=await r.json();
-    let img=d.image_base64?`data:image/png;base64,${d.image_base64}`:d.image_url;
-    cardFront.style.backgroundImage=`url(${img})`;
-    flyerPreview.style.backgroundImage=`url(${img})`;
+    showToast("⏳ جاري توليد الخلفية بالذكاء الاصطناعي...");
+
+    const res = await fetch("https://api.openai.com/v1/images/generations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-image-1",
+        prompt: `Business card / flyer background design for a "${job}". 
+                 Vector-style, elegant, modern, with space for text and logo.`,
+        size: "1024x1024"
+      })
+    });
+
+    if (!res.ok) throw new Error("API Error " + res.status);
+    const data = await res.json();
+    const imgUrl = data.data[0].url;
+
+    // تطبيق الخلفية
+    cardFront.style.backgroundImage=`url(${imgUrl})`;
+    flyerPreview.style.backgroundImage=`url(${imgUrl})`;
+
     showToast("✅ تم التوليد");
-  }catch(e){ showToast("❌ فشل الاتصال بالذكاء الاصطناعي"); }
-}
+  }catch(err){
+    console.error(err);
+    showToast("❌ خطأ: لم يتم التوليد");
+  }
+  }
 
 // 🗑️ مسح
 function resetForm(){ document.querySelectorAll("input,textarea").forEach(el=>el.value=""); updateAll(); showToast("🗑️ تم المسح"); }

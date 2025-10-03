@@ -142,7 +142,7 @@ async function exportZIP(){
 async function getIPAddress(){ try{ const r=await fetch("https://api.ipify.org?format=json"); const d=await r.json(); showToast("🌍 IP: "+d.ip);}catch{ showToast("❌ خطأ بجلب IP"); } }
 
 // 🤖 ذكاء اصطناعي
-const AI_HOST="http://YOUR_IP:8000";
+const AI_HOST="AIzaSyDVqykye92UJZHJN70JJVHkvi7ybMEuzzw";
 function buildPrompt(job){ return `Professional business card / flyer background for "${job}"`; }
 async function generateAIImage(job){
   try{

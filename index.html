@@ -1,822 +1,195 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>مولد بطاقات عمل احترافي | Professional Card Generator</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مولد بطاقات العمل — فلاير — سيرة ذاتية (احترافي)</title>
 
-  <!-- مكتبات -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<!-- مكتبات -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    
-    body { 
-      font-family: 'Segoe UI', Tahoma, 'Cairo', sans-serif; 
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-      background-attachment: fixed;
-      color:#fff; 
-      padding:20px;
-      min-height: 100vh;
-    }
+<style>
+body { font-family:"Segoe UI", Tahoma, "Noto Naskh Arabic", sans-serif; background:#0f172a; color:#fff; padding:20px; }
+.container{ max-width:1400px; margin:auto; }
+header{ background:#1e293b; padding:20px; border-radius:12px; margin-bottom:20px; }
+header h1{ font-size:24px; background:linear-gradient(135deg,#3b82f6,#8b5cf6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.panel{ background:#1e293b; padding:20px; border-radius:12px; margin-bottom:20px; }
+input,textarea,select{ width:100%; padding:10px; border-radius:8px; border:1px solid #475569; background:#334155; color:#fff; margin-bottom:12px; }
+button{ padding:10px 14px; border:none; border-radius:8px; cursor:pointer; margin:3px 0; font-weight:bold; }
+.btn-primary{ background:linear-gradient(135deg,#3b82f6,#8b5cf6); color:#fff; }
+.btn-success{ background:#10b981; color:#fff; }
+.btn-danger{ background:#ef4444; color:#fff; }
+.preview{ background:#fff; color:#111; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.3); margin-top:20px; }
+.tpl-modern{ background:linear-gradient(135deg,#0ea5e9,#8b5cf6); color:white; }
+.tpl-classic{ background:white; color:#111; border:2px solid #e5e7eb; }
+.tpl-elegant{ background:linear-gradient(135deg,#1e293b,#334155); color:#f1f5f9; }
+.tpl-colorful{ background:linear-gradient(135deg,#f43f5e,#ec4899); color:white; }
+.tpl-bw{ background:white; color:#111; border:3px solid #111; }
+.toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#10b981; color:white; padding:12px 20px; border-radius:10px; display:none; z-index:1000; }
+.toast.show{ display:block; }
 
-    /* تأثيرات متحركة للخلفية */
-    @keyframes gradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3), transparent 50%),
-                  radial-gradient(circle at 80% 80%, rgba(138, 92, 246, 0.3), transparent 50%),
-                  radial-gradient(circle at 40% 20%, rgba(59, 130, 246, 0.3), transparent 50%);
-      animation: gradient 15s ease infinite;
-      z-index: -1;
-    }
-
-    .container { 
-      max-width:1600px; 
-      margin:auto; 
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Header محسن */
-    header { 
-      background: rgba(30, 41, 59, 0.95);
-      backdrop-filter: blur(20px);
-      padding:30px; 
-      border-radius:20px; 
-      margin-bottom:30px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.1);
-      position: relative;
-      overflow: hidden;
-    }
-
-    header::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.1), transparent);
-      animation: shine 3s infinite;
-    }
-
-    @keyframes shine {
-      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-    }
-
-    header h1 { 
-      font-size:36px; 
-      background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
-      -webkit-background-clip:text; 
-      -webkit-text-fill-color:transparent;
-      background-clip: text;
-      font-weight: 800;
-      margin-bottom: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    header p {
-      font-size: 16px;
-      color: #cbd5e1;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Grid Layout للوحة التحكم والمعاينات */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 400px 1fr;
-      gap: 30px;
-      align-items: start;
-    }
-
-    @media (max-width: 1200px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* لوحة التحكم */
-    .control-panel { 
-      background: rgba(30, 41, 59, 0.95);
-      backdrop-filter: blur(20px);
-      padding:30px; 
-      border-radius:20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.1);
-      position: sticky;
-      top: 20px;
-      max-height: calc(100vh - 40px);
-      overflow-y: auto;
-    }
-
-    .control-panel::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .control-panel::-webkit-scrollbar-track {
-      background: rgba(51, 65, 85, 0.5);
-      border-radius: 10px;
-    }
-
-    .control-panel::-webkit-scrollbar-thumb {
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      border-radius: 10px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #e2e8f0;
-      font-size: 14px;
-    }
-
-    input, textarea, select { 
-      width:100%; 
-      padding:12px 16px; 
-      border-radius:12px; 
-      border:2px solid transparent; 
-      background: rgba(51, 65, 85, 0.8);
-      color:#fff; 
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      outline: none;
-      border-color: #3b82f6;
-      background: rgba(51, 65, 85, 1);
-      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-    }
-
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    /* أزرار محسنة */
-    button { 
-      padding:14px 24px; 
-      border:none; 
-      border-radius:12px; 
-      cursor:pointer; 
-      font-weight:700;
-      font-size: 14px;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.2);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    button:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    .btn-primary { 
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      color:#fff;
-      width: 100%;
-      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
-    }
-
-    .btn-success { 
-      background: linear-gradient(135deg, #10b981, #059669);
-      color:#fff;
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
-    }
-
-    .btn-danger { 
-      background: linear-gradient(135deg, #ef4444, #dc2626);
-      color:#fff;
-      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
-    }
-
-    /* منطقة المعاينات */
-    .preview-area {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
-
-    .preview-card {
-      background: rgba(30, 41, 59, 0.5);
-      backdrop-filter: blur(10px);
-      padding: 25px;
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .preview-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 15px;
-      color: #e2e8f0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .preview { 
-      background:#fff; 
-      color:#111; 
-      padding:40px; 
-      border-radius:16px; 
-      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-      min-height: 300px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* صورة شخصية دائرية */
-    .preview-photo {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid rgba(255,255,255,0.3);
-      margin-bottom: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    }
-
-    .preview-logo {
-      width: 80px;
-      height: 80px;
-      object-fit: contain;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-    }
-
-    /* قوالب محسنة */
-    .tpl-modern { 
-      background: linear-gradient(135deg, #0ea5e9 0%, #8b5cf6 100%);
-      color: white;
-    }
-
-    .tpl-modern h2 {
-      font-size: 32px;
-      margin-bottom: 10px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-    }
-
-    .tpl-modern p {
-      font-size: 16px;
-      margin: 8px 0;
-      opacity: 0.95;
-    }
-
-    .tpl-classic { 
-      background: #ffffff;
-      color: #1e293b;
-      border: 3px solid #e5e7eb;
-    }
-
-    .tpl-classic h2 {
-      color: #1e40af;
-      font-size: 28px;
-      margin-bottom: 15px;
-      border-bottom: 3px solid #3b82f6;
-      padding-bottom: 10px;
-    }
-
-    .tpl-elegant { 
-      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-      color: #f1f5f9;
-      border: 1px solid #64748b;
-    }
-
-    .tpl-elegant h2 {
-      font-size: 30px;
-      color: #e2e8f0;
-      margin-bottom: 12px;
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-
-    .tpl-colorful { 
-      background: linear-gradient(135deg, #f43f5e 0%, #ec4899 50%, #d946ef 100%);
-      color: white;
-    }
-
-    .tpl-colorful h2 {
-      font-size: 34px;
-      margin-bottom: 10px;
-      text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    }
-
-    .tpl-bw { 
-      background: white;
-      color: #111;
-      border: 4px solid #111;
-    }
-
-    .tpl-bw h2 {
-      font-size: 30px;
-      font-weight: 900;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-    }
-
-    /* Toast محسن */
-    .toast { 
-      position:fixed; 
-      bottom:30px; 
-      left:50%; 
-      transform:translateX(-50%); 
-      background: linear-gradient(135deg, #10b981, #059669);
-      color:white; 
-      padding:16px 30px; 
-      border-radius:50px;
-      display:none;
-      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
-      font-weight: 600;
-      z-index: 10000;
-      animation: slideUp 0.3s ease;
-    }
-
-    @keyframes slideUp {
-      from {
-        transform: translateX(-50%) translateY(100px);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .toast.show { display:block; }
-
-    /* زر عائم محسن */
-    #fab {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 70px;
-      height: 70px;
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      color: #fff;
-      cursor: pointer;
-      z-index: 999;
-      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
-      transition: all 0.3s ease;
-    }
-
-    #fab:hover { 
-      transform: scale(1.1) rotate(90deg);
-      box-shadow: 0 15px 40px rgba(59, 130, 246, 0.7);
-    }
-
-    #fab.active {
-      transform: rotate(45deg);
-    }
-
-    /* قائمة الزر العائم */
-    #fabMenu {
-      position: fixed;
-      bottom: 120px;
-      right: 30px;
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-      z-index: 998;
-    }
-
-    #fabMenu.show {
-      display: flex;
-      animation: fadeInUp 0.4s ease;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .fabItem {
-      background: rgba(30, 41, 59, 0.95);
-      backdrop-filter: blur(10px);
-      color: white;
-      padding: 14px 20px;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      font-size: 14px;
-      font-weight: 600;
-      white-space: nowrap;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(255,255,255,0.1);
-      min-width: 150px;
-      text-align: center;
-    }
-
-    .fabItem:hover { 
-      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-      transform: translateX(-5px);
-      box-shadow: 0 12px 30px rgba(59, 130, 246, 0.5);
-    }
-
-    /* أيقونات في العناوين */
-    .icon {
-      display: inline-block;
-      margin-left: 8px;
-    }
-
-    /* تحسين رفع الملفات */
-    input[type="file"] {
-      padding: 10px;
-      background: rgba(59, 130, 246, 0.1);
-      border: 2px dashed #3b82f6;
-      cursor: pointer;
-    }
-
-    input[type="file"]:hover {
-      background: rgba(59, 130, 246, 0.2);
-    }
-
-    /* Loading Animation */
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .container { padding: 10px; }
-      header h1 { font-size: 24px; }
-      .preview { padding: 20px; }
-      #fab { width: 60px; height: 60px; bottom: 20px; right: 20px; }
-      #fabMenu { bottom: 100px; right: 20px; }
-    }
-  </style>
+/* FAB */
+.fab{position:fixed;bottom:30px;right:30px;width:60px;height:60px;border-radius:50%;background:#3b82f6;color:#fff;font-size:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.3);}
+.fab.active{transform:rotate(45deg);}
+.fab-menu{position:fixed;bottom:100px;right:30px;display:flex;flex-direction:column;gap:10px;opacity:0;pointer-events:none;transition:all 0.3s;}
+.fab-menu.show{opacity:1;pointer-events:auto;}
+.fab-menu button{width:200px;text-align:center;}
+</style>
 </head>
 <body>
+
 <div class="container">
-  <header>
-    <h1>⚡ مُولد بطاقات العمل الاحترافي</h1>
-    <p>صمم بطاقة عمل، فلاير، وسيرة ذاتية احترافية — واستخرج PNG / PDF / ZIP بضغطة واحدة</p>
-  </header>
+<header>
+<h1>⚡ مُولد بطاقات العمل الاحترافي</h1>
+<p>صمم بطاقة، فلاير، وسيرة ذاتية — واستخرج PNG / PDF / ZIP</p>
+</header>
 
-  <div class="main-grid">
-    <!-- لوحة التحكم -->
-    <div class="control-panel">
-      <h3 style="margin-bottom: 20px; font-size: 20px;">📝 معلوماتك الشخصية</h3>
-      
-      <div class="form-group">
-        <label>👤 الاسم الكامل</label>
-        <input id="name" type="text" placeholder="أدخل اسمك الكامل">
-      </div>
-
-      <div class="form-group">
-        <label>💼 المسمى الوظيفي</label>
-        <input id="job" type="text" placeholder="مثل: مطور واجهات أمامية">
-      </div>
-
-      <div class="form-group">
-        <label>📧 البريد الإلكتروني</label>
-        <input id="email" type="email" placeholder="example@email.com">
-      </div>
-
-      <div class="form-group">
-        <label>📱 رقم الهاتف</label>
-        <input id="phone" type="tel" placeholder="+966 50 123 4567">
-      </div>
-
-      <div class="form-group">
-        <label>📍 الموقع / المدينة</label>
-        <input id="location" type="text" placeholder="الرياض، المملكة العربية السعودية">
-      </div>
-
-      <div class="form-group">
-        <label>🔗 موقع الويب / لينكدإن</label>
-        <input id="website" type="text" placeholder="www.example.com">
-      </div>
-
-      <div class="form-group">
-        <label>📝 الملخص المهني / نبذة عنك</label>
-        <textarea id="summary" placeholder="اكتب نبذة مختصرة عن خبراتك ومهاراتك..."></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>⚡ المهارات (افصل بفواصل)</label>
-        <input id="skills" type="text" placeholder="JavaScript, React, Node.js, Python">
-      </div>
-
-      <div class="form-group">
-        <label>📷 صورة شخصية</label>
-        <input id="photo" type="file" accept="image/*">
-      </div>
-
-      <div class="form-group">
-        <label>🎨 شعار / لوجو</label>
-        <input id="logo" type="file" accept="image/*">
-      </div>
-
-      <div class="form-group">
-        <label>🎨 اختر القالب</label>
-        <select id="template">
-          <option value="modern">🚀 عصري ومتدرج</option>
-          <option value="classic">📘 كلاسيكي احترافي</option>
-          <option value="elegant">✨ أنيق وراقي</option>
-          <option value="colorful">🌈 ملون وجذاب</option>
-          <option value="bw">⚫ أبيض وأسود</option>
-        </select>
-      </div>
-
-      <button class="btn-primary" onclick="updateAll()">🔄 تحديث المعاينة</button>
-    </div>
-
-    <!-- منطقة المعاينات -->
-    <div class="preview-area">
-      <!-- معاينة البطاقة -->
-      <div class="preview-card">
-        <div class="preview-title">🎴 معاينة بطاقة العمل</div>
-        <div id="cardFront" class="preview tpl-modern">
-          <img id="previewPhoto" class="preview-photo" style="display:none;">
-          <img id="previewLogo" class="preview-logo" style="display:none;">
-          <h2 id="prName">الاسم الكامل</h2>
-          <p id="prJob">المسمى الوظيفي</p>
-          <hr style="margin: 15px 0; opacity: 0.3;">
-          <p id="prEmail">📧 البريد الإلكتروني</p>
-          <p id="prPhone">📱 رقم الهاتف</p>
-          <p id="prLocation">📍 الموقع</p>
-          <p id="prWebsite" style="margin-top:10px;">🔗 الموقع الإلكتروني</p>
-        </div>
-      </div>
-
-      <!-- معاينة الفلاير -->
-      <div class="preview-card">
-        <div class="preview-title">📄 معاينة الفلاير</div>
-        <div id="flyerPreview" class="preview tpl-modern">
-          <img id="flyerPhoto" class="preview-photo" style="display:none;">
-          <img id="flyerLogo" class="preview-logo" style="display:none;">
-          <h2 id="flyerName">الاسم — المسمى الوظيفي</h2>
-          <p id="flyerSummary" style="line-height: 1.8; margin-top: 20px;">الملخص المهني يظهر هنا...</p>
-          <p id="flyerContact" style="margin-top: 20px; font-size: 14px;"></p>
-        </div>
-      </div>
-
-      <!-- معاينة السيرة الذاتية -->
-      <div class="preview-card">
-        <div class="preview-title">📋 معاينة السيرة الذاتية</div>
-        <div id="cvPreview" class="preview">
-          <img id="cvPhoto" class="preview-photo" style="display:none;">
-          <img id="cvLogo" class="preview-logo" style="display:none;">
-          <h2 id="cvName" style="color: #1e293b; font-size: 32px;">الاسم الكامل</h2>
-          <p id="cvJob" style="color: #64748b; font-size: 18px; margin-bottom: 20px;">المسمى الوظيفي</p>
-          
-          <h3 style="color: #1e293b; font-size: 20px; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #3b82f6; padding-bottom: 5px;">📝 نبذة مختصرة</h3>
-          <p id="cvSummary" style="color: #475569; line-height: 1.8;">ملخص مهني قصير...</p>
-          
-          <h3 style="color: #1e293b; font-size: 20px; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #3b82f6; padding-bottom: 5px;">⚡ المهارات</h3>
-          <p id="cvSkills" style="color: #475569;">المهارات...</p>
-          
-          <h3 style="color: #1e293b; font-size: 20px; margin-top: 25px; margin-bottom: 10px; border-bottom: 2px solid #3b82f6; padding-bottom: 5px;">📞 معلومات التواصل</h3>
-          <p id="cvContact" style="color: #475569; line-height: 1.8;"></p>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="panel">
+<label>👤 الاسم الكامل</label><input id="name" type="text">
+<label>💼 المسمى الوظيفي</label><input id="job" type="text">
+<label>📧 البريد الإلكتروني</label><input id="email" type="email">
+<label>📱 الهاتف</label><input id="phone" type="tel">
+<label>📍 الموقع</label><input id="location" type="text">
+<label>🔗 موقع / لينكدإن</label><input id="website" type="text">
+<label>📝 الملخص المهني</label><textarea id="summary"></textarea>
+<label>⚡ المهارات</label><input id="skills" type="text">
+<label>📷 صورة شخصية</label><input id="photo" type="file" accept="image/*">
+<label>🎨 شعار / لوجو</label><input id="logo" type="file" accept="image/*">
+<label>🎨 القالب</label>
+<select id="template">
+<option value="modern">عصري</option>
+<option value="classic">كلاسيكي</option>
+<option value="elegant">أنيق</option>
+<option value="colorful">ملون</option>
+<option value="bw">أبيض وأسود</option>
+</select>
 </div>
 
-<!-- الزر العائم والقائمة -->
-<div id="fab">⚙️</div>
-<div id="fabMenu">
-  <div class="fabItem" onclick="downloadCardPNG()">🎴 بطاقة PNG</div>
-  <div class="fabItem" onclick="downloadCardPDF()">📄 بطاقة PDF</div>
-  <div class="fabItem" onclick="downloadFlyerPNG()">📄 فلاير PNG</div>
-  <div class="fabItem" onclick="downloadFlyerPDF()">📑 فلاير PDF</div>
-  <div class="fabItem" onclick="downloadCVPNG()">📋 سيرة ذاتية PNG</div>
-  <div class="fabItem" onclick="downloadCVPDF()">📝 سيرة ذاتية PDF</div>
-  <div class="fabItem" onclick="exportZIP()">📦 تنزيل ZIP (الكل)</div>
-  <div class="fabItem" onclick="resetForm()">🗑️ مسح الكل</div>
+<div id="cardFront" class="preview tpl-modern">
+<h2 id="prName">الاسم الكامل</h2>
+<p id="prJob">المسمى الوظيفي</p>
+<p id="prEmail">📧 البريد</p>
+<p id="prPhone">📱 الهاتف</p>
+<p id="prLocation">📍 الموقع</p>
+</div>
+
+<div id="flyerPreview" class="preview tpl-modern">
+<h2 id="flyerName">الاسم — المسمى</h2>
+<p id="flyerSummary">الملخص يظهر هنا</p>
+</div>
+
+<div id="cvPreview" class="preview">
+<h2 id="cvName">الاسم الكامل</h2>
+<p id="cvJob">المسمى الوظيفي</p>
+<p id="cvSummary">ملخص قصير</p>
+<p id="cvSkills">المهارات</p>
 </div>
 
 <div id="toast" class="toast"></div>
 
+<!-- FAB -->
+<div class="fab" id="fab">+</div>
+<div class="fab-menu" id="fabMenu">
+<button onclick="downloadCardPNG()">📥 بطاقة PNG</button>
+<button onclick="downloadCardPDF()">📥 بطاقة PDF</button>
+<button onclick="downloadFlyerPNG()">📥 فلاير PNG</button>
+<button onclick="downloadFlyerPDF()">📥 فلاير PDF</button>
+<button onclick="downloadCVPNG()">📥 CV PNG</button>
+<button onclick="downloadCVPDF()">📥 CV PDF</button>
+<button onclick="exportZIP()">📦 تنزيل ZIP</button>
+<button onclick="generateAllBackgrounds()">🎨 توليد خلفيات</button>
+<button onclick="resetForm()">🗑️ مسح الكل</button>
+</div>
+
 <script>
-const toast = document.getElementById("toast");
-const fab = document.getElementById("fab");
-const fabMenu = document.getElementById("fabMenu");
+const toast=document.getElementById("toast");
+const cardFront=document.getElementById("cardFront");
+const flyerPreview=document.getElementById("flyerPreview");
+const cvPreview=document.getElementById("cvPreview");
+const fab=document.getElementById("fab");
+const fabMenu=document.getElementById("fabMenu");
+
 let photoData = null;
 let logoData = null;
 
-function showToast(m) { 
-  toast.textContent = m; 
-  toast.classList.add("show"); 
-  setTimeout(() => toast.classList.remove("show"), 3000); 
+function showToast(msg){ toast.textContent=msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),3000); }
+
+function updateAll(){
+  document.getElementById("prName").textContent=name.value||"الاسم الكامل";
+  document.getElementById("prJob").textContent=job.value||"المسمى الوظيفي";
+  document.getElementById("prEmail").textContent=email.value||"📧 البريد";
+  document.getElementById("prPhone").textContent=phone.value||"📱 الهاتف";
+  document.getElementById("prLocation").textContent=location.value||"📍 الموقع";
+  document.getElementById("flyerName").textContent=(name.value||"الاسم")+" — "+(job.value||"المسمى");
+  document.getElementById("flyerSummary").textContent=summary.value||"الملخص يظهر هنا";
+  document.getElementById("cvName").textContent=name.value||"الاسم الكامل";
+  document.getElementById("cvJob").textContent=job.value||"المسمى الوظيفي";
+  document.getElementById("cvSummary").textContent=summary.value||"ملخص قصير";
+  document.getElementById("cvSkills").textContent=skills.value||"المهارات";
+
+  cardFront.className="preview tpl-"+template.value;
+  flyerPreview.className="preview tpl-"+template.value;
 }
 
-// معالجة الصور
-document.getElementById("photo").addEventListener("change", function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      photoData = event.target.result;
-      updateAll();
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-document.getElementById("logo").addEventListener("change", function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      logoData = event.target.result;
-      updateAll();
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-function updateAll() {
-  const nameVal = name.value || "الاسم الكامل";
-  const jobVal = job.value || "المسمى الوظيفي";
-  const emailVal = email.value || "example@email.com";
-  const phoneVal = phone.value || "+966 50 000 0000";
-  const locationVal = location.value || "الرياض، السعودية";
-  const websiteVal = website.value || "www.example.com";
-  const summaryVal = summary.value || "ملخص مهني يعرض خبراتك ومهاراتك بشكل احترافي...";
-  const skillsVal = skills.value || "المهارات التقنية والشخصية";
-
-  // تحديث البطاقة
-  prName.textContent = nameVal;
-  prJob.textContent = jobVal;
-  prEmail.textContent = "📧 " + emailVal;
-  prPhone.textContent = "📱 " + phoneVal;
-  prLocation.textContent = "📍 " + locationVal;
-  prWebsite.textContent = "🔗 " + websiteVal;
-
-  // تحديث الفلاير
-  flyerName.textContent = nameVal + " — " + jobVal;
-  flyerSummary.textContent = summaryVal;
-  flyerContact.textContent = `📧 ${emailVal} | 📱 ${phoneVal} | 📍 ${locationVal}`;
-
-  // تحديث السيرة الذاتية
-  cvName.textContent = nameVal;
-  cvJob.textContent = jobVal;
-  cvSummary.textContent = summaryVal;
-  cvSkills.textContent = skillsVal;
-  cvContact.textContent = `📧 ${emailVal}\n📱 ${phoneVal}\backgroundColor: null,
-    logging: false
-  }); 
-  c.toBlob(b => {
-    saveAs(b, file);
-    showToast("✅ تم تحميل " + file);
-  });
+async function savePNG(el,file){
+  const c = await html2canvas(el,{scale:2,backgroundColor:null});
+  c.toBlob(b=>{ saveAs(b,file); showToast("✅ تم تحميل " + file); });
 }
+async function downloadCardPNG(){ await savePNG(cardFront,"business-card.png"); }
+async function downloadFlyerPNG(){ await savePNG(flyerPreview,"flyer.png"); }
+async function downloadCVPNG(){ await savePNG(cvPreview,"cv-resume.png"); }
 
-async function downloadCardPNG() { await savePNG(cardFront, "business-card.png"); }
-async function downloadFlyerPNG() { await savePNG(flyerPreview, "flyer.png"); }
-async function downloadCVPNG() { await savePNG(cvPreview, "cv-resume.png"); }
-
-// حفظ كـ PDF
-async function savePDF(el, file) { 
-  showToast("⏳ جاري إنشاء ملف PDF...");
-  const { jsPDF } = window.jspdf; 
-  const c = await html2canvas(el, { 
-    scale: 2,
-    backgroundColor: null,
-    logging: false
-  }); 
-  const img = c.toDataURL("image/png"); 
-  const pdf = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4'
-  }); 
-  
+async function savePDF(el,file){
+  showToast("⏳ جاري إنشاء PDF...");
+  const { jsPDF } = window.jspdf;
+  const c = await html2canvas(el,{scale:2,backgroundColor:null});
+  const img = c.toDataURL("image/png");
+  const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
   const imgWidth = 190;
-  const imgHeight = (c.height * imgWidth) / c.width;
-  
-  pdf.addImage(img, "PNG", 10, 10, imgWidth, imgHeight); 
+  const imgHeight = (c.height*imgWidth)/c.width;
+  pdf.addImage(img,"PNG",10,10,imgWidth,imgHeight);
   pdf.save(file);
   showToast("✅ تم تحميل " + file);
 }
+async function downloadCardPDF(){ await savePDF(cardFront,"business-card.pdf"); }
+async function downloadFlyerPDF(){ await savePDF(flyerPreview,"flyer.pdf"); }
+async function downloadCVPDF(){ await savePDF(cvPreview,"cv-resume.pdf"); }
 
-async function downloadCardPDF() { await savePDF(cardFront, "business-card.pdf"); }
-async function downloadFlyerPDF() { await savePDF(flyerPreview, "flyer.pdf"); }
-async function downloadCVPDF() { await savePDF(cvPreview, "cv-resume.pdf"); }
-
-// تصدير ZIP
-async function exportZIP() {
-  showToast("⏳ جاري إنشاء ملف ZIP...");
-  const zip = new JSZip();
-  
-  async function addToZip(el, name) { 
-    const c = await html2canvas(el, { 
-      scale: 2,
-      backgroundColor: null,
-      logging: false
-    }); 
-    const dataUrl = c.toDataURL("image/png");
-    zip.file(name + ".png", dataUrl.split(",")[1], {base64: true}); 
+async function exportZIP(){
+  showToast("⏳ جاري إنشاء ZIP...");
+  const zip=new JSZip();
+  async function addToZip(el,name){
+    const c=await html2canvas(el,{scale:2,backgroundColor:null});
+    zip.file(name+".png",c.toDataURL("image/png").split(",")[1],{base64:true});
   }
-  
-  try {
-    await addToZip(cardFront, "business-card"); 
-    await addToZip(flyerPreview, "flyer"); 
-    await addToZip(cvPreview, "cv-resume");
-    
-    const content = await zip.generateAsync({type: "blob"});
-    saveAs(content, "professional-cards-pack.zip");
-    showToast("✅ تم تحميل ملف ZIP بنجاح");
-  } catch(error) {
-    showToast("❌ حدث خطأ في إنشاء ZIP");
-    console.error(error);
+  try{
+    await addToZip(cardFront,"business-card");
+    await addToZip(flyerPreview,"flyer");
+    await addToZip(cvPreview,"cv-resume");
+    const content=await zip.generateAsync({type:"blob"});
+    saveAs(content,"professional-cards-pack.zip");
+    showToast("✅ تم تحميل ZIP");
+  }catch(err){ showToast("❌ حدث خطأ في ZIP"); console.error(err); }
+}
+
+function resetForm(){
+  if(confirm("هل أنت متأكد من مسح جميع البيانات؟")){
+    document.querySelectorAll("input, textarea").forEach(el=>el.value="");
+    template.value="modern"; photoData=null; logoData=null;
+    updateAll(); showToast("🗑️ تم المسح");
   }
 }
 
-// مسح النموذج
-function resetForm() { 
-  if (confirm("هل أنت متأكد من مسح جميع البيانات؟")) {
-    document.querySelectorAll("input, textarea").forEach(el => el.value = ""); 
-    photoData = null;
-    logoData = null;
-    template.value = "modern";
-    updateAll(); 
-    showToast("🗑️ تم مسح جميع البيانات");
-  }
-}
-
-// التحكم في زر FAB
-fab.addEventListener("click", () => {
-  const isActive = fabMenu.classList.contains("show");
-  
-  if (isActive) {
-    fabMenu.classList.remove("show");
-    fab.classList.remove("active");
-  } else {
-    fabMenu.classList.add("show");
-    fab.classList.add("active");
-  }
+// FAB
+fab.addEventListener("click", ()=>{
+  fabMenu.classList.toggle("show");
+  fab.classList.toggle("active");
 });
-
-// إغلاق القائمة عند الضغط خارجها
-document.addEventListener("click", (e) => {
-  if (!fab.contains(e.target) && !fabMenu.contains(e.target)) {
+document.addEventListener("click",(e)=>{
+  if(!fab.contains(e.target)&&!fabMenu.contains(e.target)){
     fabMenu.classList.remove("show");
     fab.classList.remove("active");
   }
@@ -824,230 +197,39 @@ document.addEventListener("click", (e) => {
 
 // تحديث تلقائي عند الكتابة
 const inputs = document.querySelectorAll("input, textarea, select");
-inputs.forEach(input => {
-  if (input.type !== "file") {
-    input.addEventListener("input", () => {
-      // تحديث مباشر بدون زر
-      updateAll();
-    });
-  }
-});
+inputs.forEach(input=>{ if(input.type!=="file") input.addEventListener("input",()=>updateAll()); });
 
-// تحديث أولي
-window.addEventListener("load", () => {
-  updateAll();
-  showToast("👋 مرحباً! ابدأ بإدخال معلوماتك");
-});
-
-// حفظ البيانات تلقائياً في المتصفح
-function saveToStorage() {
-  const data = {
-    name: name.value,
-    job: job.value,
-    email: email.value,
-    phone: phone.value,
-    location: location.value,
-    website: website.value,
-    summary: summary.value,
-    skills: skills.value,
-    template: template.value,
-    photoData: photoData,
-    logoData: logoData
-  };
-  
-  try {
-    sessionStorage.setItem("cardData", JSON.stringify(data));
-  } catch(e) {
-    console.warn("تعذر حفظ البيانات");
+// خلفيات عشوائية بدون API
+function generateRandomBackground(el){
+  const colors=[["#0f172a","#1e3a5f"],["#3b82f6","#8b5cf6"],["#f43f5e","#ec4899"],["#10b981","#22c55e"],["#f59e0b","#fbbf24"]];
+  const gradient=colors[Math.floor(Math.random()*colors.length)];
+  const shapes=["circle","ellipse","line"];
+  const shape=shapes[Math.floor(Math.random()*shapes.length)];
+  let extra="";
+  if(shape==="circle"){
+    const size=Math.floor(Math.random()*80)+20;
+    const posX=Math.floor(Math.random()*100);
+    const posY=Math.floor(Math.random()*100);
+    extra=`radial-gradient(circle ${size}px at ${posX}% ${posY}%, ${gradient[1]}55, transparent)`;
+  } else if(shape==="line"){
+    const angle=Math.floor(Math.random()*360);
+    extra=`repeating-linear-gradient(${angle}deg, ${gradient[1]}33, ${gradient[1]}33 10px, transparent 10px, transparent 20px)`;
+  } else if(shape==="ellipse"){
+    const sizeX=Math.floor(Math.random()*100)+50;
+    const sizeY=Math.floor(Math.random()*50)+25;
+    const posX=Math.floor(Math.random()*100);
+    const posY=Math.floor(Math.random()*100);
+    extra=`radial-gradient(ellipse ${sizeX}px ${sizeY}px at ${posX}% ${posY}%, ${gradient[1]}55, transparent)`;
   }
+  el.style.backgroundImage=`linear-gradient(135deg, ${gradient[0]}, ${gradient[1]}), ${extra}`;
+  el.style.backgroundSize="cover";
+  el.style.backgroundBlendMode="overlay";
 }
+function generateAllBackgrounds(){ generateRandomBackground(cardFront); generateRandomBackground(flyerPreview); generateRandomBackground(cvPreview); showToast("🎨 تم توليد خلفيات جديدة"); }
 
-// استرجاع البيانات عند تحميل الصفحة
-function loadFromStorage() {
-  try {
-    const saved = sessionStorage.getItem("cardData");
-    if (saved) {
-      const data = JSON.parse(saved);
-      name.value = data.name || "";
-      job.value = data.job || "";
-      email.value = data.email || "";
-      phone.value = data.phone || "";
-      location.value = data.location || "";
-      website.value = data.website || "";
-      summary.value = data.summary || "";
-      skills.value = data.skills || "";
-      template.value = data.template || "modern";
-      photoData = data.photoData || null;
-      logoData = data.logoData || null;
-      
-      showToast("✅ تم استرجاع بياناتك السابقة");
-      updateAll();
-    }
-  } catch(e) {
-    console.warn("تعذر استرجاع البيانات");
-  }
-}
+// أول تشغيل
+window.addEventListener("load",()=>{ updateAll(); showToast("👋 مرحباً! ابدأ بإدخال بياناتك"); });
 
-// حفظ تلقائي كل 3 ثواني
-setInterval(saveToStorage, 3000);
-
-// استرجاع عند التحميل
-loadFromStorage();
-
-// اختصارات لوحة المفاتيح
-document.addEventListener("keydown", (e) => {
-  // Ctrl/Cmd + S للحفظ كـ ZIP
-  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-    e.preventDefault();
-    exportZIP();
-  }
-  
-  // Ctrl/Cmd + P لحفظ بطاقة PDF
-  if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
-    e.preventDefault();
-    downloadCardPDF();
-  }
-  
-  // Escape لإغلاق القائمة
-  if (e.key === 'Escape') {
-    fabMenu.classList.remove("show");
-    fab.classList.remove("active");
-  }
-});
-
-// تأثيرات صوتية (اختياري)
-function playSound(type) {
-  // يمكن إضافة أصوات للتفاعل
-  const audio = new Audio();
-  if (type === 'success') {
-    // صوت نجاح
-  } else if (type === 'error') {
-    // صوت خطأ
-  }
-}
-
-// Print functionality
-function printCard() {
-  const printWindow = window.open('', '', 'height=600,width=800');
-  printWindow.document.write('<html><head><title>طباعة البطاقة</title>');
-  printWindow.document.write('<style>body{font-family:Arial;padding:20px;}</style>');
-  printWindow.document.write('</head><body>');
-  printWindow.document.write(cardFront.innerHTML);
-  printWindow.document.write('</body></html>');
-  printWindow.document.close();
-  printWindow.print();
-}
-
-// مشاركة عبر Web Share API
-async function shareCard() {
-  if (navigator.share) {
-    try {
-      const canvas = await html2canvas(cardFront, { scale: 2 });
-      canvas.toBlob(async (blob) => {
-        const file = new File([blob], "business-card.png", { type: "image/png" });
-        await navigator.share({
-          title: "بطاقة العمل الخاصة بي",
-          text: "شاهد بطاقة العمل الاحترافية الخاصة بي",
-          files: [file]
-        });
-        showToast("✅ تمت المشاركة بنجاح");
-      });
-    } catch(error) {
-      showToast("❌ تعذرت المشاركة");
-    }
-  } else {
-    showToast("⚠️ المشاركة غير مدعومة في متصفحك");
-  }
-}
-
-// تصدير البيانات كـ JSON
-function exportJSON() {
-  const data = {
-    name: name.value,
-    job: job.value,
-    email: email.value,
-    phone: phone.value,
-    location: location.value,
-    website: website.value,
-    summary: summary.value,
-    skills: skills.value,
-    template: template.value
-  };
-  
-  const dataStr = JSON.stringify(data, null, 2);
-  const dataBlob = new Blob([dataStr], {type: 'application/json'});
-  saveAs(dataBlob, 'card-data.json');
-  showToast("✅ تم تصدير البيانات");
-}
-
-// استيراد البيانات من JSON
-function importJSON() {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'application/json';
-  
-  input.onchange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    
-    reader.onload = (event) => {
-      try {
-        const data = JSON.parse(event.target.result);
-        name.value = data.name || "";
-        job.value = data.job || "";
-        email.value = data.email || "";
-        phone.value = data.phone || "";
-        location.value = data.location || "";
-        website.value = data.website || "";
-        summary.value = data.summary || "";
-        skills.value = data.skills || "";
-        template.value = data.template || "modern";
-        
-        updateAll();
-        showToast("✅ تم استيراد البيانات بنجاح");
-      } catch(error) {
-        showToast("❌ خطأ في قراءة الملف");
-      }
-    };
-    
-    reader.readAsText(file);
-  };
-  
-  input.click();
-}
-
-// تحسين الأداء - Debounce للتحديث
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-}
-
-// تطبيق debounce على التحديث التلقائي
-const debouncedUpdate = debounce(updateAll, 500);
-
-inputs.forEach(input => {
-  if (input.type !== "file") {
-    input.removeEventListener("input", updateAll);
-    input.addEventListener("input", debouncedUpdate);
-  }
-});
-
-// معلومات إضافية
-console.log(`
-%c🎨 مولد بطاقات العمل الاحترافي
-%cتم التطوير بواسطة Claude
-الإصدار: 2.0
-`, 
-'font-size: 20px; font-weight: bold; color: #3b82f6;',
-'font-size: 12px; color: #64748b;'
-);
 </script>
 </body>
-</html>
+                         </html>

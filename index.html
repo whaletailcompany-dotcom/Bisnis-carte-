@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>مولد بطاقات العمل — فلاير — سيرة ذاتية (احترافي)</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مولد بطاقات عمل وفلاير وسيرة ذاتية</title>
 
 <!-- مكتبات -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -12,39 +12,32 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <style>
-body { font-family:"Segoe UI", Tahoma, "Noto Naskh Arabic", sans-serif; background:#0f172a; color:#fff; padding:20px; }
-.container{ max-width:1400px; margin:auto; }
-header{ background:#1e293b; padding:20px; border-radius:12px; margin-bottom:20px; }
-header h1{ font-size:24px; background:linear-gradient(135deg,#3b82f6,#8b5cf6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.panel{ background:#1e293b; padding:20px; border-radius:12px; margin-bottom:20px; }
-input,textarea,select{ width:100%; padding:10px; border-radius:8px; border:1px solid #475569; background:#334155; color:#fff; margin-bottom:12px; }
+body { font-family: "Segoe UI", Tahoma, "Noto Naskh Arabic", sans-serif; background: #f0f4f8; color:#111; padding:20px; }
+.container{ max-width:1200px; margin:auto; }
+header{ background:#1e293b; padding:20px; border-radius:12px; margin-bottom:20px; color:white; }
+header h1{ font-size:24px; }
+.panel{ background:#334155; padding:20px; border-radius:12px; margin-bottom:20px; color:white; }
+input,textarea,select{ width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:12px; background:#475569; color:#fff; }
 button{ padding:10px 14px; border:none; border-radius:8px; cursor:pointer; margin:3px 0; font-weight:bold; }
-.btn-primary{ background:linear-gradient(135deg,#3b82f6,#8b5cf6); color:#fff; }
-.btn-success{ background:#10b981; color:#fff; }
-.btn-danger{ background:#ef4444; color:#fff; }
-.preview{ background:#fff; color:#111; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.3); margin-top:20px; }
-.tpl-modern{ background:linear-gradient(135deg,#0ea5e9,#8b5cf6); color:white; }
-.tpl-classic{ background:white; color:#111; border:2px solid #e5e7eb; }
-.tpl-elegant{ background:linear-gradient(135deg,#1e293b,#334155); color:#f1f5f9; }
-.tpl-colorful{ background:linear-gradient(135deg,#f43f5e,#ec4899); color:white; }
-.tpl-bw{ background:white; color:#111; border:3px solid #111; }
-.toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#10b981; color:white; padding:12px 20px; border-radius:10px; display:none; z-index:1000; }
+.btn-primary{ background:#3b82f6; color:white; }
+.btn-success{ background:#10b981; color:white; }
+.btn-danger{ background:#ef4444; color:white; }
+.preview{ background:white; color:#111; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.2); margin-top:20px; position:relative; }
+.card-img, .cv-img, .flyer-img { border-radius:50%; width:80px; height:80px; object-fit:cover; border:3px solid #3b82f6; }
+.card-logo, .flyer-logo { width:50px; height:50px; object-fit:contain; position:absolute; top:10px; right:10px; }
+.tpl-modern { background: linear-gradient(135deg,#0ea5e9,#8b5cf6); color:white; }
+.tpl-classic { background:white; color:#111; border:2px solid #e5e7eb; }
+.tpl-elegant { background: linear-gradient(135deg,#1e293b,#334155); color:#f1f5f9; }
+.tpl-colorful { background: linear-gradient(135deg,#f43f5e,#ec4899); color:white; }
+.toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#10b981; color:white; padding:12px 20px; border-radius:10px; display:none; z-index:9999; }
 .toast.show{ display:block; }
-
-/* FAB */
-.fab{position:fixed;bottom:30px;right:30px;width:60px;height:60px;border-radius:50%;background:#3b82f6;color:#fff;font-size:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;box-shadow:0 4px 12px rgba(0,0,0,.3);}
-.fab.active{transform:rotate(45deg);}
-.fab-menu{position:fixed;bottom:100px;right:30px;display:flex;flex-direction:column;gap:10px;opacity:0;pointer-events:none;transition:all 0.3s;}
-.fab-menu.show{opacity:1;pointer-events:auto;}
-.fab-menu button{width:200px;text-align:center;}
 </style>
 </head>
 <body>
-
 <div class="container">
 <header>
-<h1>⚡ مُولد بطاقات العمل الاحترافي</h1>
-<p>صمم بطاقة، فلاير، وسيرة ذاتية — واستخرج PNG / PDF / ZIP</p>
+<h1>⚡ مولد بطاقات عمل وفلاير وسيرة ذاتية</h1>
+<p>صمم بطاقتك، فلايرك، وسيرتك الذاتية — وتحميل PNG/PDF/ZIP</p>
 </header>
 
 <div class="panel">
@@ -53,7 +46,6 @@ button{ padding:10px 14px; border:none; border-radius:8px; cursor:pointer; margi
 <label>📧 البريد الإلكتروني</label><input id="email" type="email">
 <label>📱 الهاتف</label><input id="phone" type="tel">
 <label>📍 الموقع</label><input id="location" type="text">
-<label>🔗 موقع / لينكدإن</label><input id="website" type="text">
 <label>📝 الملخص المهني</label><textarea id="summary"></textarea>
 <label>⚡ المهارات</label><input id="skills" type="text">
 <label>📷 صورة شخصية</label><input id="photo" type="file" accept="image/*">
@@ -64,11 +56,25 @@ button{ padding:10px 14px; border:none; border-radius:8px; cursor:pointer; margi
 <option value="classic">كلاسيكي</option>
 <option value="elegant">أنيق</option>
 <option value="colorful">ملون</option>
-<option value="bw">أبيض وأسود</option>
 </select>
+
+<button class="btn-primary" onclick="updateAll()">🔄 تحديث المعاينة</button>
+<hr>
+<button class="btn-success" onclick="downloadCardPNG()">📥 بطاقة PNG</button>
+<button class="btn-success" onclick="downloadCardPDF()">📥 بطاقة PDF</button>
+<button class="btn-success" onclick="downloadFlyerPNG()">📥 فلاير PNG</button>
+<button class="btn-success" onclick="downloadFlyerPDF()">📥 فلاير PDF</button>
+<button class="btn-success" onclick="downloadCVPNG()">📥 CV PNG</button>
+<button class="btn-success" onclick="downloadCVPDF()">📥 CV PDF</button>
+<button class="btn-success" onclick="exportZIP()">📦 تنزيل الكل ZIP</button>
+<hr>
+<button class="btn-danger" onclick="resetForm()">🗑️ مسح الكل</button>
 </div>
 
+<!-- المعاينات -->
 <div id="cardFront" class="preview tpl-modern">
+<img id="cardPhoto" class="card-img" src="" alt="صورة شخصية">
+<img id="cardLogo" class="card-logo" src="" alt="شعار">
 <h2 id="prName">الاسم الكامل</h2>
 <p id="prJob">المسمى الوظيفي</p>
 <p id="prEmail">📧 البريد</p>
@@ -76,160 +82,142 @@ button{ padding:10px 14px; border:none; border-radius:8px; cursor:pointer; margi
 <p id="prLocation">📍 الموقع</p>
 </div>
 
-<div id="flyerPreview" class="preview tpl-modern">
+<div id="flyerPreview" class="preview tpl-modern" style="min-height:250px;">
+<img id="flyerPhoto" class="flyer-img" src="" alt="صورة شخصية">
+<img id="flyerLogo" class="flyer-logo" src="" alt="شعار">
 <h2 id="flyerName">الاسم — المسمى</h2>
 <p id="flyerSummary">الملخص يظهر هنا</p>
+<p id="flyerSkills">المهارات: -</p>
 </div>
 
-<div id="cvPreview" class="preview">
+<div id="cvPreview" class="preview tpl-classic" style="min-height:300px;">
+<img id="cvPhoto" class="cv-img" src="" alt="صورة شخصية">
 <h2 id="cvName">الاسم الكامل</h2>
 <p id="cvJob">المسمى الوظيفي</p>
 <p id="cvSummary">ملخص قصير</p>
 <p id="cvSkills">المهارات</p>
 </div>
 
+</div>
 <div id="toast" class="toast"></div>
 
-<!-- FAB -->
-<div class="fab" id="fab">+</div>
-<div class="fab-menu" id="fabMenu">
-<button onclick="downloadCardPNG()">📥 بطاقة PNG</button>
-<button onclick="downloadCardPDF()">📥 بطاقة PDF</button>
-<button onclick="downloadFlyerPNG()">📥 فلاير PNG</button>
-<button onclick="downloadFlyerPDF()">📥 فلاير PDF</button>
-<button onclick="downloadCVPNG()">📥 CV PNG</button>
-<button onclick="downloadCVPDF()">📥 CV PDF</button>
-<button onclick="exportZIP()">📦 تنزيل ZIP</button>
-<button onclick="generateAllBackgrounds()">🎨 توليد خلفيات</button>
-<button onclick="resetForm()">🗑️ مسح الكل</button>
-</div>
-
 <script>
+// toast
 const toast=document.getElementById("toast");
-const cardFront=document.getElementById("cardFront");
-const flyerPreview=document.getElementById("flyerPreview");
-const cvPreview=document.getElementById("cvPreview");
-const fab=document.getElementById("fab");
-const fabMenu=document.getElementById("fabMenu");
+function showToast(m){ toast.textContent=m; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),3000); }
 
+// صور
 let photoData = null;
 let logoData = null;
 
-function showToast(msg){ toast.textContent=msg; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),3000); }
+document.getElementById('photo').addEventListener('change', function(e){
+  const reader = new FileReader();
+  reader.onload = function() { 
+    photoData = reader.result;
+    updateAll();
+  };
+  reader.readAsDataURL(e.target.files[0]);
+});
 
+document.getElementById('logo').addEventListener('change', function(e){
+  const reader = new FileReader();
+  reader.onload = function() { 
+    logoData = reader.result;
+    updateAll();
+  };
+  reader.readAsDataURL(e.target.files[0]);
+});
+
+// تحديث المعاينة
 function updateAll(){
-  document.getElementById("prName").textContent=name.value||"الاسم الكامل";
-  document.getElementById("prJob").textContent=job.value||"المسمى الوظيفي";
-  document.getElementById("prEmail").textContent=email.value||"📧 البريد";
-  document.getElementById("prPhone").textContent=phone.value||"📱 الهاتف";
-  document.getElementById("prLocation").textContent=location.value||"📍 الموقع";
-  document.getElementById("flyerName").textContent=(name.value||"الاسم")+" — "+(job.value||"المسمى");
-  document.getElementById("flyerSummary").textContent=summary.value||"الملخص يظهر هنا";
-  document.getElementById("cvName").textContent=name.value||"الاسم الكامل";
-  document.getElementById("cvJob").textContent=job.value||"المسمى الوظيفي";
-  document.getElementById("cvSummary").textContent=summary.value||"ملخص قصير";
-  document.getElementById("cvSkills").textContent=skills.value||"المهارات";
+  // نصوص
+  document.getElementById('prName').textContent = name.value || "الاسم الكامل";
+  document.getElementById('prJob').textContent = job.value || "المسمى الوظيفي";
+  document.getElementById('prEmail').textContent = email.value || "📧 البريد";
+  document.getElementById('prPhone').textContent = phone.value || "📱 الهاتف";
+  document.getElementById('prLocation').textContent = location.value || "📍 الموقع";
 
-  cardFront.className="preview tpl-"+template.value;
-  flyerPreview.className="preview tpl-"+template.value;
+  document.getElementById('flyerName').textContent = (name.value || "الاسم") + " — " + (job.value || "المسمى");
+  document.getElementById('flyerSummary').textContent = summary.value || "الملخص يظهر هنا";
+  document.getElementById('flyerSkills').textContent = "المهارات: " + (skills.value || "-");
+
+  document.getElementById('cvName').textContent = name.value || "الاسم الكامل";
+  document.getElementById('cvJob').textContent = job.value || "المسمى الوظيفي";
+  document.getElementById('cvSummary').textContent = summary.value || "ملخص قصير";
+  document.getElementById('cvSkills').textContent = skills.value || "المهارات";
+
+  // صور
+  document.getElementById('cardPhoto').src = photoData || "";
+  document.getElementById('cardLogo').src = logoData || "";
+  document.getElementById('flyerPhoto').src = photoData || "";
+  document.getElementById('flyerLogo').src = logoData || "";
+  document.getElementById('cvPhoto').src = photoData || "";
+
+  // قالب
+  const tpl = template.value;
+  cardFront.className = "preview tpl-"+tpl;
+  flyerPreview.className = "preview tpl-"+tpl;
+  cvPreview.className = "preview tpl-"+(tpl==="classic"?"classic":"modern");
+
+  showToast("✅ تحديث المعاينة");
 }
 
+// حفظ كصورة PNG
 async function savePNG(el,file){
-  const c = await html2canvas(el,{scale:2,backgroundColor:null});
-  c.toBlob(b=>{ saveAs(b,file); showToast("✅ تم تحميل " + file); });
+  const c = await html2canvas(el, { scale:2, backgroundColor:null });
+  c.toBlob(b=>{ saveAs(b,file); showToast("✅ تم تحميل "+file); });
 }
-async function downloadCardPNG(){ await savePNG(cardFront,"business-card.png"); }
-async function downloadFlyerPNG(){ await savePNG(flyerPreview,"flyer.png"); }
-async function downloadCVPNG(){ await savePNG(cvPreview,"cv-resume.png"); }
 
+async function downloadCardPNG(){ savePNG(cardFront,"business-card.png"); }
+async function downloadFlyerPNG(){ savePNG(flyerPreview,"flyer.png"); }
+async function downloadCVPNG(){ savePNG(cvPreview,"cv-resume.png"); }
+
+// حفظ كـ PDF
 async function savePDF(el,file){
-  showToast("⏳ جاري إنشاء PDF...");
+  showToast("⏳ جاري إنشاء ملف PDF...");
   const { jsPDF } = window.jspdf;
-  const c = await html2canvas(el,{scale:2,backgroundColor:null});
+  const c = await html2canvas(el, { scale:2, backgroundColor:null });
   const img = c.toDataURL("image/png");
-  const pdf = new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const pdf = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
   const imgWidth = 190;
-  const imgHeight = (c.height*imgWidth)/c.width;
+  const imgHeight = (c.height * imgWidth)/c.width;
   pdf.addImage(img,"PNG",10,10,imgWidth,imgHeight);
   pdf.save(file);
-  showToast("✅ تم تحميل " + file);
+  showToast("✅ تم تحميل "+file);
 }
-async function downloadCardPDF(){ await savePDF(cardFront,"business-card.pdf"); }
-async function downloadFlyerPDF(){ await savePDF(flyerPreview,"flyer.pdf"); }
-async function downloadCVPDF(){ await savePDF(cvPreview,"cv-resume.pdf"); }
 
+async function downloadCardPDF(){ savePDF(cardFront,"business-card.pdf"); }
+async function downloadFlyerPDF(){ savePDF(flyerPreview,"flyer.pdf"); }
+async function downloadCVPDF(){ savePDF(cvPreview,"cv-resume.pdf"); }
+
+// ZIP
 async function exportZIP(){
   showToast("⏳ جاري إنشاء ZIP...");
-  const zip=new JSZip();
-  async function addToZip(el,name){
-    const c=await html2canvas(el,{scale:2,backgroundColor:null});
-    zip.file(name+".png",c.toDataURL("image/png").split(",")[1],{base64:true});
+  const zip = new JSZip();
+  async function add(el,name){
+    const c = await html2canvas(el,{scale:2, backgroundColor:null});
+    zip.file(name+".png", c.toDataURL("image/png").split(",")[1], {base64:true});
   }
-  try{
-    await addToZip(cardFront,"business-card");
-    await addToZip(flyerPreview,"flyer");
-    await addToZip(cvPreview,"cv-resume");
-    const content=await zip.generateAsync({type:"blob"});
-    saveAs(content,"professional-cards-pack.zip");
-    showToast("✅ تم تحميل ZIP");
-  }catch(err){ showToast("❌ حدث خطأ في ZIP"); console.error(err); }
+  await add(cardFront,"business-card");
+  await add(flyerPreview,"flyer");
+  await add(cvPreview,"cv-resume");
+  const content = await zip.generateAsync({type:"blob"});
+  saveAs(content,"all-pack.zip");
+  showToast("✅ تم تحميل ZIP");
 }
 
+// مسح
 function resetForm(){
   if(confirm("هل أنت متأكد من مسح جميع البيانات؟")){
-    document.querySelectorAll("input, textarea").forEach(el=>el.value="");
-    template.value="modern"; photoData=null; logoData=null;
-    updateAll(); showToast("🗑️ تم المسح");
+    document.querySelectorAll("input,textarea").forEach(el=>el.value="");
+    photoData = null; logoData = null; template.value="modern";
+    updateAll();
+    showToast("🗑️ تم المسح");
   }
 }
 
-// FAB
-fab.addEventListener("click", ()=>{
-  fabMenu.classList.toggle("show");
-  fab.classList.toggle("active");
-});
-document.addEventListener("click",(e)=>{
-  if(!fab.contains(e.target)&&!fabMenu.contains(e.target)){
-    fabMenu.classList.remove("show");
-    fab.classList.remove("active");
-  }
-});
-
-// تحديث تلقائي عند الكتابة
-const inputs = document.querySelectorAll("input, textarea, select");
-inputs.forEach(input=>{ if(input.type!=="file") input.addEventListener("input",()=>updateAll()); });
-
-// خلفيات عشوائية بدون API
-function generateRandomBackground(el){
-  const colors=[["#0f172a","#1e3a5f"],["#3b82f6","#8b5cf6"],["#f43f5e","#ec4899"],["#10b981","#22c55e"],["#f59e0b","#fbbf24"]];
-  const gradient=colors[Math.floor(Math.random()*colors.length)];
-  const shapes=["circle","ellipse","line"];
-  const shape=shapes[Math.floor(Math.random()*shapes.length)];
-  let extra="";
-  if(shape==="circle"){
-    const size=Math.floor(Math.random()*80)+20;
-    const posX=Math.floor(Math.random()*100);
-    const posY=Math.floor(Math.random()*100);
-    extra=`radial-gradient(circle ${size}px at ${posX}% ${posY}%, ${gradient[1]}55, transparent)`;
-  } else if(shape==="line"){
-    const angle=Math.floor(Math.random()*360);
-    extra=`repeating-linear-gradient(${angle}deg, ${gradient[1]}33, ${gradient[1]}33 10px, transparent 10px, transparent 20px)`;
-  } else if(shape==="ellipse"){
-    const sizeX=Math.floor(Math.random()*100)+50;
-    const sizeY=Math.floor(Math.random()*50)+25;
-    const posX=Math.floor(Math.random()*100);
-    const posY=Math.floor(Math.random()*100);
-    extra=`radial-gradient(ellipse ${sizeX}px ${sizeY}px at ${posX}% ${posY}%, ${gradient[1]}55, transparent)`;
-  }
-  el.style.backgroundImage=`linear-gradient(135deg, ${gradient[0]}, ${gradient[1]}), ${extra}`;
-  el.style.backgroundSize="cover";
-  el.style.backgroundBlendMode="overlay";
-}
-function generateAllBackgrounds(){ generateRandomBackground(cardFront); generateRandomBackground(flyerPreview); generateRandomBackground(cvPreview); showToast("🎨 تم توليد خلفيات جديدة"); }
-
-// أول تشغيل
-window.addEventListener("load",()=>{ updateAll(); showToast("👋 مرحباً! ابدأ بإدخال بياناتك"); });
-
+// تحديث أولي
+window.addEventListener("load", updateAll);
 </script>
 </body>
-                         </html>
+  </html>

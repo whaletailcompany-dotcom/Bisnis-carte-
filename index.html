@@ -142,7 +142,151 @@ async function exportZIP(){
 async function getIPAddress(){ try{ const r=await fetch("https://api.ipify.org?format=json"); const d=await r.json(); showToast("🌍 IP: "+d.ip);}catch{ showToast("❌ خطأ بجلب IP"); } }
 
 // 🤖 ذكاء اصطناعي
-const AI_HOST="AIzaSyDVqykye92UJZHJN70JJVHkvi7ybMEuzzw";
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>مولد بطاقات عمل — فلاير — سيرة ذاتية (احترافي)</title>
+
+  <!-- مكتبات -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+  <style>
+    body { font-family: "Segoe UI", Tahoma, "Noto Naskh Arabic", sans-serif; background: linear-gradient(135deg,#0f172a,#1e3a5f); color:#fff; padding:20px; }
+    .container{ max-width:1400px; margin:auto; }
+    header{ background:#1e293b; padding:20px; border-radius:12px; margin-bottom:20px; }
+    header h1{ font-size:24px; background:linear-gradient(135deg,#3b82f6,#8b5cf6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .panel{ background:#1e293b; padding:20px; border-radius:12px; margin-bottom:20px; }
+    input,textarea,select{ width:100%; padding:10px; border-radius:8px; border:1px solid #475569; background:#334155; color:#fff; margin-bottom:12px; }
+    button{ padding:10px 14px; border:none; border-radius:8px; cursor:pointer; margin:3px 0; font-weight:bold; }
+    .btn-primary{ background:linear-gradient(135deg,#3b82f6,#8b5cf6); color:#fff; }
+    .btn-success{ background:#10b981; color:#fff; }
+    .btn-danger{ background:#ef4444; color:#fff; }
+    .preview{ background:#fff; color:#111; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,.3); margin-top:20px; }
+    .tpl-modern{ background:linear-gradient(135deg,#0ea5e9,#8b5cf6); color:white; }
+    .tpl-classic{ background:white; color:#111; border:2px solid #e5e7eb; }
+    .tpl-elegant{ background:linear-gradient(135deg,#1e293b,#334155); color:#f1f5f9; }
+    .tpl-colorful{ background:linear-gradient(135deg,#f43f5e,#ec4899); color:white; }
+    .tpl-bw{ background:white; color:#111; border:3px solid #111; }
+    .toast{ position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#10b981; color:white; padding:12px 20px; border-radius:10px; display:none; }
+    .toast.show{ display:block; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>⚡ مُولد بطاقات العمل الاحترافي</h1>
+    <p>صمم بطاقة، فلاير، وسيرة ذاتية — واستخرج PNG / PDF / ZIP</p>
+  </header>
+
+  <div class="panel">
+    <label>👤 الاسم الكامل</label><input id="name" type="text">
+    <label>💼 المسمى الوظيفي</label><input id="job" type="text">
+    <label>📧 البريد الإلكتروني</label><input id="email" type="email">
+    <label>📱 الهاتف</label><input id="phone" type="tel">
+    <label>📍 الموقع</label><input id="location" type="text">
+    <label>🔗 موقع / لينكدإن</label><input id="website" type="text">
+    <label>📝 الملخص المهني</label><textarea id="summary"></textarea>
+    <label>⚡ المهارات</label><input id="skills" type="text">
+    <label>📷 صورة شخصية</label><input id="photo" type="file" accept="image/*">
+    <label>🎨 شعار / لوجو</label><input id="logo" type="file" accept="image/*">
+    <label>🎨 القالب</label>
+    <select id="template">
+      <option value="modern">عصري</option>
+      <option value="classic">كلاسيكي</option>
+      <option value="elegant">أنيق</option>
+      <option value="colorful">ملون</option>
+      <option value="bw">أبيض وأسود</option>
+    </select>
+
+    <button class="btn-primary" onclick="updateAll()">🔄 تحديث المعاينة</button>
+    <hr>
+    <button class="btn-success" onclick="downloadCardPNG()">📥 بطاقة PNG</button>
+    <button class="btn-success" onclick="downloadCardPDF()">📥 بطاقة PDF</button>
+    <button class="btn-success" onclick="downloadFlyerPNG()">📥 فلاير PNG</button>
+    <button class="btn-success" onclick="downloadFlyerPDF()">📥 فلاير PDF</button>
+    <button class="btn-success" onclick="downloadCVPNG()">📥 CV PNG</button>
+    <button class="btn-success" onclick="downloadCVPDF()">📥 CV PDF</button>
+    <button class="btn-success" onclick="exportZIP()">📦 تنزيل الكل ZIP</button>
+    <hr>
+    <button class="btn-primary" onclick="getIPAddress()">🌍 جلب IP</button>
+    <button class="btn-primary" onclick="generateAIImage(job.value)">🤖 توليد خلفية بالذكاء الاصطناعي</button>
+    <button class="btn-danger" onclick="resetForm()">🗑️ مسح الكل</button>
+  </div>
+
+  <div id="cardFront" class="preview tpl-modern">
+    <h2 id="prName">الاسم الكامل</h2>
+    <p id="prJob">المسمى الوظيفي</p>
+    <p id="prEmail">📧 البريد</p>
+    <p id="prPhone">📱 الهاتف</p>
+    <p id="prLocation">📍 الموقع</p>
+  </div>
+
+  <div id="flyerPreview" class="preview tpl-modern">
+    <h2 id="flyerName">الاسم — المسمى</h2>
+    <p id="flyerSummary">الملخص يظهر هنا</p>
+  </div>
+
+  <div id="cvPreview" class="preview">
+    <h2 id="cvName">الاسم الكامل</h2>
+    <p id="cvJob">المسمى الوظيفي</p>
+    <p id="cvSummary">ملخص قصير</p>
+    <p id="cvSkills">المهارات</p>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+const toast=document.getElementById("toast");
+function showToast(m){ toast.textContent=m; toast.classList.add("show"); setTimeout(()=>toast.classList.remove("show"),3000); }
+
+function updateAll(){
+  prName.textContent=name.value||"الاسم الكامل";
+  prJob.textContent=job.value||"المسمى الوظيفي";
+  prEmail.textContent=email.value||"📧 البريد";
+  prPhone.textContent=phone.value||"📱 الهاتف";
+  prLocation.textContent=location.value||"📍 الموقع";
+  flyerName.textContent=(name.value||"الاسم")+" — "+(job.value||"المسمى");
+  flyerSummary.textContent=summary.value||"الملخص يظهر هنا";
+  cvName.textContent=name.value||"الاسم الكامل";
+  cvJob.textContent=job.value||"المسمى الوظيفي";
+  cvSummary.textContent=summary.value||"ملخص قصير";
+  cvSkills.textContent=skills.value||"المهارات";
+  cardFront.className="preview tpl-"+template.value;
+  flyerPreview.className="preview tpl-"+template.value;
+  showToast("✅ تحديث");
+}
+
+// 🖼️ حفظ كصورة
+async function savePNG(el,file){ const c=await html2canvas(el); c.toBlob(b=>saveAs(b,file)); }
+async function downloadCardPNG(){ savePNG(cardFront,"card.png"); }
+async function downloadFlyerPNG(){ savePNG(flyerPreview,"flyer.png"); }
+async function downloadCVPNG(){ savePNG(cvPreview,"cv.png"); }
+
+// 📄 حفظ كـ PDF
+async function savePDF(el,file){ const {jsPDF}=window.jspdf; const c=await html2canvas(el); const img=c.toDataURL("image/png"); const pdf=new jsPDF(); pdf.addImage(img,"PNG",10,10,180,100); pdf.save(file); }
+async function downloadCardPDF(){ savePDF(cardFront,"card.pdf"); }
+async function downloadFlyerPDF(){ savePDF(flyerPreview,"flyer.pdf"); }
+async function downloadCVPDF(){ savePDF(cvPreview,"cv.pdf"); }
+
+// 📦 ZIP
+async function exportZIP(){
+  const zip=new JSZip();
+  async function add(el,name){ const c=await html2canvas(el); zip.file(name+".png",c.toDataURL("image/png").split(",")[1],{base64:true}); }
+  await add(cardFront,"card"); await add(flyerPreview,"flyer"); await add(cvPreview,"cv");
+  zip.generateAsync({type:"blob"}).then(c=>saveAs(c,"all.zip"));
+  showToast("📦 ZIP جاهز");
+}
+
+// 🌍 جلب IP
+async function getIPAddress(){ try{ const r=await fetch("https://api.ipify.org?format=json"); const d=await r.json(); showToast("🌍 IP: "+d.ip);}catch{ showToast("❌ خطأ بجلب IP"); } }
+
+// 🤖 ذكاء اصطناعي
+const AI_HOST="http://YOUR_IP:8000";
 function buildPrompt(job){ return `Professional business card / flyer background for "${job}"`; }
 async function generateAIImage(job){
   try{
@@ -160,4 +304,4 @@ async function generateAIImage(job){
 function resetForm(){ document.querySelectorAll("input,textarea").forEach(el=>el.value=""); updateAll(); showToast("🗑️ تم المسح"); }
 </script>
 </body>
-  </html>
+</html>

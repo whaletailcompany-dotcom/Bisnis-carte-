@@ -3,450 +3,834 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>مولد تصاميم احترافي متعدد القوالب</title>
+<title>مولد بطاقات عمل احترافي</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-  /* [الـ Reset والتنظيم العام كما هو] */
-  * { margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI", Tahoma, "Noto Naskh Arabic", sans-serif; }
-  body { background:#0f172a; color:#fff; padding:15px; }
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+  font-family: "Segoe UI", Tahoma, "Noto Naskh Arabic", sans-serif; 
+}
 
-  /* Container */
-  .container { max-width: 1200px; margin:auto; }
+body { 
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+  color: #fff; 
+  padding: 20px; 
+  min-height: 100vh;
+}
 
-  header { text-align:center; margin-bottom:20px; }
-  header h1 { font-size:24px; background:linear-gradient(135deg,#3b82f6,#8b5cf6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-  header p { margin-top:5px; font-size:16px; color:#a1a1aa; }
+.container { 
+  max-width: 1400px; 
+  margin: auto; 
+}
 
-  /* Form Panel */
-  .panel { background:#1e293b; padding:20px; border-radius:10px; margin-bottom:20px; display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:15px; }
-  .form-group { display:flex; flex-direction:column; }
-  .panel label { display:block; margin-bottom:5px; font-weight:bold; font-size:14px; color:#94a3b8; }
-  .panel input:not([type="color"]), .panel textarea, .panel select { width:100%; padding:10px; border-radius:6px; border:none; background:#334155; color:#fff; }
-  .panel input[type="file"] { padding-top:10px; }
-  .color-picker-group input[type="color"] { width:40px; height:40px; border:none; padding:0; margin-left:10px; cursor:pointer; background:none; }
+header { 
+  text-align: center; 
+  margin-bottom: 30px; 
+  padding: 20px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
 
-  /* Preview Section */
-  .preview-container { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
-  .preview { border-radius:10px; padding:15px; margin-top:15px; box-shadow:0 4px 12px rgba(0,0,0,.3); position:relative; }
+header h1 { 
+  font-size: 32px; 
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899); 
+  -webkit-background-clip: text; 
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
 
-  /* Card Base Style */
-  .card { 
-      width:340px; 
-      height:190px; 
-      border-radius:12px; 
-      overflow: hidden; 
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+header p { 
+  font-size: 16px; 
+  color: #94a3b8; 
+}
+
+.panel { 
+  background: rgba(30, 41, 59, 0.8); 
+  backdrop-filter: blur(10px);
+  padding: 25px; 
+  border-radius: 15px; 
+  margin-bottom: 30px; 
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.form-group { 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.form-group label { 
+  margin-bottom: 8px; 
+  font-weight: 600; 
+  font-size: 14px; 
+  color: #cbd5e1; 
+}
+
+.form-group input:not([type="color"]), 
+.form-group textarea, 
+.form-group select { 
+  width: 100%; 
+  padding: 12px; 
+  border-radius: 8px; 
+  border: 2px solid transparent; 
+  background: #334155; 
+  color: #fff; 
+  transition: all 0.3s;
+  font-size: 14px;
+}
+
+.form-group input:focus, 
+.form-group textarea:focus, 
+.form-group select:focus { 
+  outline: none; 
+  border-color: #3b82f6;
+  background: #3d4b5f;
+}
+
+.form-group input[type="file"] { 
+  padding: 10px; 
+  cursor: pointer;
+}
+
+.color-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.color-group input[type="color"] { 
+  width: 50px; 
+  height: 50px; 
+  border: none; 
+  border-radius: 8px;
+  cursor: pointer; 
+  transition: transform 0.2s;
+}
+
+.color-group input[type="color"]:hover {
+  transform: scale(1.1);
+}
+
+.template-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.template-option {
+  padding: 15px;
+  background: #334155;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.template-option:hover {
+  background: #3d4b5f;
+  transform: translateY(-2px);
+}
+
+.template-option.active {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2));
+}
+
+.preview-section {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 30px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.preview-section h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #3b82f6;
+  font-size: 20px;
+}
+
+.preview-container { 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 30px; 
+  justify-content: center; 
+  align-items: center;
+  min-height: 250px;
+}
+
+.card { 
+  width: 350px; 
+  height: 200px; 
+  border-radius: 15px; 
+  overflow: hidden; 
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-face {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  padding: 20px;
+  display: none;
+}
+
+/* Template 1: Classic Dark */
+.template-classic-front,
+.template-classic-back {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0d2847 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.template-classic-front::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: linear-gradient(90deg, #d4af37, #f4d03f);
+}
+
+.template-classic-front .logo-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.template-classic-front .logo-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.template-classic-front .company-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #d4af37;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.template-classic-front .slogan {
+  font-size: 11px;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.template-classic-front .website {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 10px;
+  color: #0d2847;
+  font-weight: 600;
+  z-index: 3;
+}
+
+.template-classic-back {
+  background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+  color: #0d2847;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 25px;
+}
+
+.template-classic-back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 100%;
+  background: #0d2847;
+  clip-path: polygon(30% 0, 100% 0, 100% 100%, 0% 100%);
+  z-index: 0;
+}
+
+.template-classic-back .left-section,
+.template-classic-back .right-section {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.template-classic-back .left-section {
+  width: 55%;
+  gap: 8px;
+}
+
+.template-classic-back .person-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.template-classic-back .person-job {
+  font-size: 13px;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+.template-classic-back .contact-item {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 3px 0;
+}
+
+.template-classic-back .contact-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.template-classic-back .right-section {
+  width: 40%;
+  align-items: center;
+  gap: 15px;
+}
+
+.template-classic-back .qr-code {
+  width: 80px;
+  height: 80px;
+  background: #fff;
+  border-radius: 8px;
+  border: 3px solid #d4af37;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #666;
+}
+
+.template-classic-back .logo-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.template-classic-back .logo-bottom img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.template-classic-back .logo-bottom .company-text {
+  font-size: 12px;
+  font-weight: bold;
+  color: #d4af37;
+}
+
+/* Template 2: Modern Minimalist */
+.template-modern {
+  background: #ffffff;
+  color: #1e293b;
+  display: flex;
+  padding: 25px;
+}
+
+.template-modern .left-side {
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.template-modern .right-side {
+  width: 35%;
+  background: linear-gradient(180deg, #3b82f6, #1e40af);
+  margin: -25px -25px -25px 20px;
+  border-radius: 0 15px 15px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.template-modern .logo-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.template-modern .person-info h2 {
+  font-size: 24px;
+  color: #1e293b;
+  margin-bottom: 5px;
+}
+
+.template-modern .person-info p {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.template-modern .contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.template-modern .contact-info p {
+  font-size: 11px;
+  color: #475569;
+}
+
+.template-modern .photo-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.template-modern .qr-side {
+  margin-top: 15px;
+  width: 70px;
+  height: 70px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+/* Template 3: Creative Diagonal */
+.template-diagonal {
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.template-diagonal::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 150%;
+  height: 200%;
+  background: rgba(255,255,255,0.1);
+  transform: rotate(-15deg);
+}
+
+.template-diagonal .content-section {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+}
+
+.template-diagonal .logo-img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  margin-bottom: 15px;
+  filter: brightness(0) invert(1);
+}
+
+.template-diagonal h2 {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.template-diagonal p {
+  font-size: 12px;
+  opacity: 0.9;
+  margin: 3px 0;
+}
+
+.template-diagonal .photo-section {
+  position: relative;
+  z-index: 2;
+}
+
+.template-diagonal .photo-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 5px solid rgba(255,255,255,0.3);
+  object-fit: cover;
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.fab {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  width: 65px;
+  height: 65px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 32px;
+  color: #fff;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(59,130,246,0.4);
+  transition: all 0.3s;
+}
+
+.fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 32px rgba(59,130,246,0.6);
+}
+
+.fab-menu {
+  position: fixed;
+  bottom: 110px;
+  left: 30px;
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 999;
+}
+
+.fab-menu.show {
+  display: flex;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  .card-face {
-      height: 100%;
-      width: 100%;
-      position: relative;
-      padding: 15px 20px;
-      display: none; /* يتم إظهاره عبر الجافاسكريبت حسب القالب */
-      transition: all 0.3s;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fab-menu button {
+  min-width: 200px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%;
+    max-width: 350px;
   }
   
-  /* ========================================= */
-  /* 1. Simple Dark Template (وجه واحد)       */
-  /* ========================================= */
-  .card-face.simple-dark {
-      display: flex; /* إظهار هذا القالب عند التفعيل */
-      background: #1f2937; 
-      color: #fff; 
-      border: 1px solid #374151;
-      flex-direction: column;
-      justify-content: space-between;
+  .form-grid {
+    grid-template-columns: 1fr;
   }
-  .simple-dark .card-top { 
-      display:flex; 
-      justify-content:space-between; 
-      align-items:flex-start;
-  }
-  .simple-dark .card-info { 
-      margin-top:5px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5px;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.2);
-  }
-  .simple-dark .card-info h2 { font-size:18px; margin-bottom:0; grid-column: span 2; }
-  .simple-dark .card-info p { font-size:12px; margin-bottom:0; }
-  .simple-dark .logo-img { width:40px; height:40px; border-radius:50%; object-fit:cover; }
-  .simple-dark .circle-img { width:60px; height:60px; border-radius:50%; overflow:hidden; border:3px solid #fff; object-fit:cover; }
   
-
-  /* ========================================= */
-  /* 2. Gold & Navy Template (وجهين)          */
-  /* ========================================= */
-
-  /* الوجه الأمامي (معلومات الشركة) */
-  .card-face.navy-gold-front {
-      background: #0d2847; 
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      position: relative;
+  .template-selector {
+    grid-template-columns: 1fr;
   }
-  .card-face.navy-gold-front::before {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 30px;
-      background: linear-gradient(to right, #e7c271, #ffde8c);
-  }
-  .card-face.navy-gold-front .logo-img { width: 60px; height: 60px; border-radius: 0; }
-  .card-face.navy-gold-front h2 { margin-top: 10px; color: #e7c271; font-size: 20px; }
-  .card-face.navy-gold-front #cardWebsite { position: absolute; bottom: 8px; font-size: 10px; color: #111; }
-  
-  /* الوجه الخلفي (معلومات الشخص) */
-  .card-face.navy-gold-back {
-      background: linear-gradient(to right, #e7c271, #ffde8c);
-      color: #111;
-      display: flex; 
-      flex-direction: row;
-      justify-content: space-between;
-      position: relative;
-  }
-  .card-face.navy-gold-back::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 100%;
-      height: 100%;
-      background: #0d2847; 
-      transform: skewX(10deg) translateX(40%);
-      transform-origin: top left;
-      z-index: 1;
-  }
-  .card-face.navy-gold-back > * { z-index: 2; } 
-  .card-face.navy-gold-back .card-contact { width: 50%; text-align: right; }
-  .card-face.navy-gold-back .card-logo-area { width: 50%; align-items: flex-start; }
-  .card-face.navy-gold-back .qrcode { width: 70px; height: 70px; background: #fff; border: 3px solid #e7c271; }
-  
-  /* [أكواد الـ CV والفلاير كما هي] */
-  .flyer { width:210mm; height:auto; min-height:297mm; padding:30px; border:1px solid #ccc; background:#fff; color:#111; }
-  .cv { width:210mm; height:auto; min-height:297mm; padding:30px; border:1px solid #ccc; background:#fff; color:#111; }
-
-  /* FAB Menu */
-  .fab { position:fixed; bottom:20px; left:20px; width:60px; height:60px; background:#3b82f6; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:30px; color:#fff; z-index:999; box-shadow:0 4px 12px rgba(0,0,0,.4); }
-  .fab-menu { position:fixed; bottom:90px; left:20px; display:none; flex-direction:column; gap:10px; z-index:998; }
-  .fab-menu.show { display:flex; }
-  .fab-menu button { width:180px; text-align:right; }
-
+}
 </style>
 </head>
 <body>
 
 <div class="container">
   <header>
-    <h1>✨ مولد تصاميم احترافي متعدد القوالب</h1>
-    <p>اختر التصميم الذي يناسبك: بسيط أو فاخر (وجه واحد/وجهين)</p>
+    <h1>✨ مولد بطاقات العمل الاحترافي</h1>
+    <p>صمم بطاقة عملك الاحترافية بسهولة - قوالب متعددة وتصميمات عصرية</p>
   </header>
 
   <div class="panel">
-    <div class="form-group"><label>👤 الاسم الكامل</label><input id="name" type="text" value="أحمد محمد"></div>
-    <div class="form-group"><label>💼 المسمى الوظيفي</label><input id="job" type="text" value="مصمم جرافيك"></div>
-    <div class="form-group"><label>📧 البريد الإلكتروني</label><input id="email" type="email" value="info@domain.com"></div>
-    <div class="form-group"><label>📱 الهاتف</label><input id="phone" type="tel" value="+966 50 123 4567"></div>
-    <div class="form-group"><label>📍 الموقع</label><input id="location" type="text" value="الرياض، المملكة العربية السعودية"></div>
-    <div class="form-group"><label>🔗 الموقع الإلكتروني</label><input id="website" type="text" value="www.my-portfolio.com"></div>
-    <div class="form-group" style="grid-column: span 2 / auto;"><label>📝 الملخص المهني / نبذة</label><textarea id="summary">مصمم جرافيك بخبرة 5 سنوات في بناء الهوية البصرية للشركات الناشئة والمشاريع الكبرى.</textarea></div>
-    <div class="form-group"><label>⚡ المهارات</label><input id="skills" type="text" value="Photoshop, Illustrator, InDesign, UI/UX"></div>
-    <div class="form-group"><label>📷 الصورة الشخصية</label><input id="photo" type="file" accept="image/*"></div>
-    <div class="form-group"><label>🎨 الشعار / اللوجو</label><input id="logo" type="file" accept="image/*"></div>
-    <div class="form-group"><label>🎨 قالب البطاقة</label>
-      <select id="template">
-        <option value="simple-dark">1- بسيط (وجه واحد)</option>
-        <option value="navy-gold">2- فاخر (وجهين)</option>
-        <option value="custom">3- مخصص (ألوانك)</option>
-      </select>
+    <h3 style="margin-bottom: 20px; color: #3b82f6;">اختر القالب</h3>
+    <div class="template-selector">
+      <div class="template-option active" data-template="classic">
+        <div style="font-size: 24px; margin-bottom: 8px;">🎨</div>
+        <div style="font-weight: 600;">كلاسيكي فاخر</div>
+        <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">وجهين - ذهبي وأزرق</div>
+      </div>
+      <div class="template-option" data-template="modern">
+        <div style="font-size: 24px; margin-bottom: 8px;">💼</div>
+        <div style="font-weight: 600;">عصري بسيط</div>
+        <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">وجه واحد - أنيق ونظيف</div>
+      </div>
+      <div class="template-option" data-template="diagonal">
+        <div style="font-size: 24px; margin-bottom: 8px;">🚀</div>
+        <div style="font-weight: 600;">إبداعي مائل</div>
+        <div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">وجه واحد - تصميم جريء</div>
+      </div>
     </div>
-    <div class="form-group color-picker-group">
-      <label>لون أساسي</label>
-      <input id="primaryColor" type="color" value="#3b82f6">
-    </div>
-    <div class="form-group color-picker-group">
-      <label>لون ثانوي/نص</label>
-      <input id="textColor" type="color" value="#ffffff">
+
+    <h3 style="margin: 30px 0 20px 0; color: #3b82f6;">البيانات الشخصية</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>👤 الاسم الكامل</label>
+        <input id="personName" type="text" value="أحمد محمد السعيد" placeholder="اكتب اسمك الكامل">
+      </div>
+      <div class="form-group">
+        <label>💼 المسمى الوظيفي</label>
+        <input id="personJob" type="text" value="مدير تسويق رقمي" placeholder="المسمى الوظيفي">
+      </div>
+      <div class="form-group">
+        <label>📧 البريد الإلكتروني</label>
+        <input id="email" type="email" value="ahmed@company.com" placeholder="email@example.com">
+      </div>
+      <div class="form-group">
+        <label>📱 رقم الهاتف</label>
+        <input id="phone" type="tel" value="+966 50 123 4567" placeholder="+966 5X XXX XXXX">
+      </div>
+      <div class="form-group">
+        <label>📍 العنوان</label>
+        <input id="address" type="text" value="الرياض، المملكة العربية السعودية" placeholder="المدينة، البلد">
+      </div>
+      <div class="form-group">
+        <label>🌐 الموقع الإلكتروني</label>
+        <input id="website" type="text" value="www.mycompany.com" placeholder="www.example.com">
+      </div>
+      <div class="form-group">
+        <label>🏢 اسم الشركة</label>
+        <input id="companyName" type="text" value="COMPANY NAME" placeholder="اسم الشركة">
+      </div>
+      <div class="form-group">
+        <label>💬 الشعار/النبذة</label>
+        <input id="slogan" type="text" value="YOUR SLOGAN HERE" placeholder="شعار الشركة">
+      </div>
+      <div class="form-group">
+        <label>📷 صورتك الشخصية</label>
+        <input id="photoInput" type="file" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label>🎨 شعار الشركة</label>
+        <input id="logoInput" type="file" accept="image/*">
+      </div>
+      <div class="form-group color-group">
+        <div style="flex: 1;">
+          <label>🎨 اللون الأساسي</label>
+          <input id="primaryColor" type="color" value="#3b82f6">
+        </div>
+      </div>
+      <div class="form-group color-group">
+        <div style="flex: 1;">
+          <label>🎨 اللون الثانوي</label>
+          <input id="secondaryColor" type="color" value="#8b5cf6">
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="preview-container">
-    <div class="preview card" id="cardContainer">
-        <div class="card-face simple-dark" id="cardPreviewSimple">
-            <div class="card-top">
-                <img id="photoPreviewSimple" class="circle-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="الصورة الشخصية">
-                <div>
-                    <img id="logoPreviewSimple" class="logo-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="الشعار">
-                    <p id="cardJobSimple">المسمى الوظيفي</p>
-                </div>
-            </div>
-            <div class="card-info">
-                <h2 id="cardNameSimple">الاسم الكامل</h2>
-                <p id="cardEmailSimple">📧 البريد</p>
-                <p id="cardPhoneSimple">📱 الهاتف</p>
-                <p id="cardLocationSimple">📍 الموقع</p>
-                <p id="cardWebsiteSimple">🔗 الموقع</p>
-            </div>
+  <div class="preview-section">
+    <h3>👁️ معاينة البطاقة</h3>
+    <div class="preview-container" id="previewContainer">
+      <!-- Classic Template -->
+      <div class="card" id="cardFront" style="display: none;">
+        <div class="card-face template-classic-front">
+          <div class="logo-section">
+            <img class="logo-img" id="logoFront" src="" alt="Logo">
+            <div class="company-name" id="companyFront">COMPANY NAME</div>
+            <div class="slogan" id="sloganFront">YOUR SLOGAN HERE</div>
+          </div>
+          <div class="website" id="websiteFront">WWW.MYCOMPANY.COM</div>
         </div>
-        
-        <div class="card-face navy-gold-front" id="cardPreviewFront">
-            <img id="logoPreviewFront" class="logo-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="الشعار">
-            <h2 id="cardCompanyName">COMPANY LOGO</h2>
-            <p id="cardSlogan">YOUR SLOGAN HERE</p>
-            <p id="cardWebsiteFront"></p>
-        </div>
-        
-        <div class="card-face navy-gold-back" id="cardPreviewBack">
-            <div class="card-contact">
-                <h3 id="cardNameBack">الاسم الكامل</h3>
-                <p id="cardJobBack">المسمى الوظيفي</p>
-                <br>
-                <p><span style="font-size: 14px; color:#0d2847;">&#9742;</span> <span id="cardPhoneBack">الهاتف</span></p>
-                <p><span style="font-size: 14px; color:#0d2847;">&#9993;</span> <span id="cardEmailBack">البريد</span></p>
-                <p><span style="font-size: 14px; color:#0d2847;">&#127968;</span> <span id="cardLocationBack">الموقع</span></p>
+      </div>
+
+      <div class="card" id="cardBack" style="display: none;">
+        <div class="card-face template-classic-back">
+          <div class="left-section">
+            <div>
+              <div class="person-name" id="nameBack">أحمد محمد</div>
+              <div class="person-job" id="jobBack">مدير تسويق</div>
             </div>
-            <div class="card-logo-area">
-                <div class="qrcode"></div>
-                <div>
-                    <img id="logoPreviewBack" class="logo-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="الشعار">
-                    <h4>COMPANY LOGO</h4>
-                </div>
+            <div>
+              <div class="contact-item">
+                <span class="contact-icon">📞</span>
+                <span id="phoneBack">+966 50 123 4567</span>
+              </div>
+              <div class="contact-item">
+                <span class="contact-icon">✉️</span>
+                <span id="emailBack">email@company.com</span>
+              </div>
+              <div class="contact-item">
+                <span class="contact-icon">📍</span>
+                <span id="addressBack">الرياض، السعودية</span>
+              </div>
             </div>
+          </div>
+          <div class="right-section">
+            <div class="qr-code" id="qrCode">QR CODE</div>
+            <div class="logo-bottom">
+              <img id="logoBack" src="" alt="Logo">
+              <div class="company-text" id="companyBack">COMPANY</div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Modern Template -->
+      <div class="card" id="cardModern" style="display: none;">
+        <div class="card-face template-modern">
+          <div class="left-side">
+            <div>
+              <img class="logo-img" id="logoModern" src="" alt="Logo">
+              <div class="person-info">
+                <h2 id="nameModern">أحمد محمد</h2>
+                <p id="jobModern">مدير تسويق رقمي</p>
+              </div>
+            </div>
+            <div class="contact-info">
+              <p>📞 <span id="phoneModern">+966 50 123 4567</span></p>
+              <p>✉️ <span id="emailModern">email@company.com</span></p>
+              <p>🌐 <span id="websiteModern">www.company.com</span></p>
+              <p>📍 <span id="addressModern">الرياض، السعودية</span></p>
+            </div>
+          </div>
+          <div class="right-side">
+            <img class="photo-circle" id="photoModern" src="" alt="Photo">
+            <div class="qr-side" id="qrModern"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diagonal Template -->
+      <div class="card" id="cardDiagonal" style="display: none;">
+        <div class="card-face template-diagonal">
+          <div class="content-section">
+            <img class="logo-img" id="logoDiagonal" src="" alt="Logo">
+            <h2 id="nameDiagonal">أحمد محمد</h2>
+            <p id="jobDiagonal">مدير تسويق رقمي</p>
+            <p style="margin-top: 15px;">📞 <span id="phoneDiagonal">+966 50 123 4567</span></p>
+            <p>✉️ <span id="emailDiagonal">email@company.com</span></p>
+            <p>🌐 <span id="websiteDiagonal">www.company.com</span></p>
+          </div>
+          <div class="photo-section">
+            <img class="photo-circle" id="photoDiagonal" src="" alt="Photo">
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <div class="preview flyer" id="flyerPreview">...</div>
-    <div class="preview cv" id="cvPreview">...</div>
   </div>
 </div>
 
 <div class="fab" id="fab">📥</div>
-<div class="fab-menu" id="fabMenu">
-  </div>
+<div class="fab-menu" id="fabMenu"></div>
 
 <script>
-  // ===================================
-  //           منطق البيانات
-  // ===================================
-  let photoData = null, logoData = null;
-  
-  const templateSelect = document.getElementById("template");
-  const primaryColorInput = document.getElementById("primaryColor");
-  const textColorInput = document.getElementById("textColor");
-  const cardContainer = document.getElementById("cardContainer");
-  const fabMenu = document.getElementById("fabMenu");
+let currentTemplate = 'classic';
+let photoData = '';
+let logoData = '';
 
-  // تعريف عناصر البطاقات لجميع القوالب
-  const cardSimple = document.getElementById("cardPreviewSimple");
-  const cardFront = document.getElementById("cardPreviewFront");
-  const cardBack = document.getElementById("cardPreviewBack");
-
-  // [وظائف تحميل الصور كما هي، يجب تحديث جميع عناصر العرض]
-  function handleFileInput(input, previewSelectors, callback){
-    input.addEventListener("change", e=>{
-      const reader = new FileReader();
-      reader.onload = ()=>{ 
-        callback(reader.result);
-        previewSelectors.forEach(preview => preview.src = reader.result);
-      }
-      reader.readAsDataURL(e.target.files[0]);
-    });
-  }
-  
-  // تحديث جميع عناصر الصورة (Simple, Front, Back)
-  handleFileInput(document.getElementById("photo"), [document.getElementById("photoPreviewSimple")], (data) => { photoData = data; });
-  handleFileInput(document.getElementById("logo"), [document.getElementById("logoPreviewSimple"), document.getElementById("logoPreviewFront"), document.getElementById("logoPreviewBack")], (data) => { logoData = data; });
-
-
-  // وظيفة تحديث المعاينة
-  function updateAll(){
-    const nameVal = name.value || "الاسم الكامل";
-    const jobVal = job.value || "المسمى الوظيفي";
-    const summaryVal = summary.value || "YOUR SLOGAN HERE";
-
-    // --- تحديث قالب Simple Dark (وجه واحد) ---
-    document.getElementById("cardNameSimple").textContent = nameVal;
-    document.getElementById("cardJobSimple").textContent = jobVal;
-    document.getElementById("cardEmailSimple").textContent = "📧 " + (email.value || "البريد");
-    document.getElementById("cardPhoneSimple").textContent = "📱 " + (phone.value || "الهاتف");
-    document.getElementById("cardLocationSimple").textContent = "📍 " + (location.value || "الموقع");
-    document.getElementById("cardWebsiteSimple").textContent = "🔗 " + (website.value || "الموقع الإلكتروني");
-
-    // --- تحديث قالب Gold & Navy (وجهين) ---
-    document.getElementById("cardCompanyName").textContent = "COMPANY LOGO";
-    document.getElementById("cardSlogan").textContent = summaryVal;
-    document.getElementById("cardWebsiteFront").textContent = website.value || "WWW.YOURCLUB.COM";
-    
-    document.getElementById("cardNameBack").textContent = nameVal;
-    document.getElementById("cardJobBack").textContent = jobVal;
-    document.getElementById("cardPhoneBack").textContent = phone.value || "الهاتف";
-    document.getElementById("cardEmailBack").textContent = email.value || "البريد";
-    document.getElementById("cardLocationBack").textContent = location.value || "الموقع";
-    
-    // [تحديث CV والفلاير كما في الكود السابق]
-    
-    applyTemplate();
-  }
-
-  // ===================================
-  //           منطق تطبيق القالب (المرونة)
-  // ===================================
-  function applyTemplate() {
-    const template = templateSelect.value;
-    const primaryColor = primaryColorInput.value;
-    const textColor = textColorInput.value;
-    
-    // إخفاء جميع أوجه البطاقات في البداية
-    cardSimple.style.display = 'none';
-    cardFront.style.display = 'none';
-    cardBack.style.display = 'none';
-    
-    // مسح فئات الـ Custom
-    cardSimple.classList.remove("custom");
-    cardSimple.style.backgroundColor = '';
-    cardSimple.style.color = '';
-    cardSimple.querySelector('.card-info').style.borderTop = '';
-    cardSimple.querySelector('.circle-img').style.borderColor = '';
-
-
-    let downloadButtons = '';
-
-    if (template === "simple-dark" || template === "custom") {
-        // --- قالب وجه واحد (Simple / Custom) ---
-        cardSimple.style.display = 'flex';
-        
-        if(template === "custom"){
-             // تطبيق الألوان المخصصة
-            cardSimple.classList.add("custom");
-            cardSimple.style.backgroundColor = primaryColor;
-            cardSimple.style.color = textColor;
-            cardSimple.querySelector('.card-info').style.borderTop = `1px dashed ${textColor}66`;
-            cardSimple.querySelector('.circle-img').style.borderColor = textColor;
-            cardSimple.querySelectorAll('p').forEach(el => el.style.color = textColor);
-        } else {
-            // القالب الداكن القياسي
-            cardSimple.classList.add("simple-dark");
-        }
-
-        // أزرار التنزيل الخاصة بالقالب ذي الوجه الواحد
-        downloadButtons = `
-            <button class="btn-success" onclick="downloadCardPNG(cardSimple)">📥 بطاقة PNG</button>
-            <button class="btn-success" onclick="downloadCardPDF(cardSimple)">📥 بطاقة PDF</button>
-        `;
-
-    } else if (template === "navy-gold") {
-        // --- قالب وجهين (Gold & Navy) ---
-        cardFront.style.display = 'flex';
-        cardBack.style.display = 'flex';
-        cardFront.classList.add('navy-gold-front');
-        cardBack.classList.add('navy-gold-back');
-        
-        // أزرار التنزيل الخاصة بالقالب ذي الوجهين
-        downloadButtons = `
-            <button class="btn-success" onclick="downloadCardPNG(cardFront)">📥 وجه أمامي PNG</button>
-            <button class="btn-success" onclick="downloadCardPNG(cardBack)">📥 وجه خلفي PNG</button>
-            <button class="btn-primary" onclick="downloadCardPDF(cardFront)">📥 وجه أمامي PDF</button>
-            <button class="btn-primary" onclick="downloadCardPDF(cardBack)">📥 وجه خلفي PDF</button>
-        `;
-    }
-    
-    // تحديث قائمة التنزيلات في الـ FAB
-    fabMenu.innerHTML = downloadButtons + `
-        <button class="btn-danger" onclick="downloadFlyerPNG()">🖼️ فلاير PNG</button>
-        <button class="btn-danger" onclick="downloadCVPDF()">📄 CV PDF</button>
-        <button class="btn-primary" onclick="exportZIP()">📦 تنزيل الكل ZIP</button>
-    `;
-    
-    // تغيير لون CV والفلاير الأساسي
-    document.querySelectorAll('.flyer h2, .cv h1, .cv h2').forEach(el => el.style.color = primaryColor);
-    document.querySelectorAll('.flyer h2').forEach(el => el.style.borderColor = primaryColor);
-  }
-
-  // ربط الأحداث
-  document.querySelectorAll("input,textarea,select").forEach(el=>{
-    el.addEventListener("input", updateAll);
+// Template selection
+document.querySelectorAll('.template-option').forEach(option => {
+  option.addEventListener('click', function() {
+    document.querySelectorAll('.template-option').forEach(o => o.classList.remove('active'));
+    this.classList.add('active');
+    currentTemplate = this.dataset.template;
+    updatePreview();
   });
-  primaryColorInput.addEventListener("input", updateAll);
-  textColorInput.addEventListener("input", updateAll);
+});
 
-
-  // ===================================
-  //           منطق التحميل (تم تعديله ليقبل العنصر كمدخل)
-  // ===================================
-
-  async function savePNG(el, file){
-    const canvas = await html2canvas(el, {scale:4, backgroundColor:null});
-    canvas.toBlob(b=>saveAs(b,file));
+// File inputs
+document.getElementById('photoInput').addEventListener('change', function(e) {
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    photoData = event.target.result;
+    updatePreview();
+  };
+  if (e.target.files[0]) {
+    reader.readAsDataURL(e.target.files[0]);
   }
+});
 
-  async function savePDF(el,file){
-    const {jsPDF} = window.jspdf;
-    const canvas = await html2canvas(el,{scale:4, backgroundColor:null});
-    const img = canvas.toDataURL("image/png");
-    const pdf = new jsPDF({orientation:'landscape', unit:'mm', format:[90, 55]});
-    const imgWidth = 90;
-    const imgHeight = 55; 
-    pdf.addImage(img,"PNG",0,0,imgWidth,imgHeight);
-    pdf.save(file);
+document.getElementById('logoInput').addEventListener('change', function(e) {
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    logoData = event.target.result;
+    updatePreview();
+  };
+  if (e.target.files[0]) {
+    reader.readAsDataURL(e.target.files[0]);
   }
+});
 
-  // وظائف التحميل العامة (يجب أن تستدعي savePNG/savePDF مع العنصر الصحيح)
-  async function downloadCardPNG(el){ 
-      await savePNG(el, el.id.includes("Back") ? "business-card-back.png" : "business-card-front.png"); 
-  }
-  async function downloadCardPDF(el){ 
-      await savePDF(el, el.id.includes("Back") ? "business-card-back.pdf" : "business-card-front.pdf"); 
-  }
-  
-  async function downloadFlyerPNG(){ await savePNG(document.getElementById("flyerPreview"),"flyer.png"); }
-  async function downloadCVPDF(){ await savePDF(document.getElementById("cvPreview"),"cv-resume.pdf"); }
-
-  async function exportZIP(){
-    const zip = new JSZip();
-    async function add(el,name){
-      const canvas = await html2canvas(el,{scale:4, backgroundColor:null});
-      zip.file(name+".png", canvas.toDataURL("image/png").split(",")[1], {base64:true});
-    }
-    
-    // تحديد العناصر المراد تصديرها بناءً على القالب المختار
-    const template = templateSelect.value;
-    if (template === "navy-gold") {
-        await add(cardFront,"business-card-front");
-        await add(cardBack,"business-card-back");
-    } else {
-        await add(cardSimple,"business-card");
-    }
-    
-    await add(document.getElementById("flyerPreview"),"flyer");
-    await add(document.getElementById("cvPreview"),"cv-resume");
-    const content = await zip.generateAsync({type:"blob"});
-    saveAs(content,"all-designs.zip");
-  }
-
-  // [منطق زر FAB كما هو]
-  const fab = document.getElementById("fab");
-  const fabMenu = document.getElementById("fabMenu");
-  fab.addEventListener("click", ()=>{
-    fabMenu.classList.toggle("show");
-  });
-
-  document.addEventListener("click",(e)=>{
-    if(!fab.contains(e.target) && !fabMenu.contains(e.target)){
-      fabMenu.classList.remove("show");
-    }
-  });
-
-  window.addEventListener("load", updat
+// Update preview
+function updatePreview() {
+  const data = {
+    personName: document.getElementById('personName').value,
+    personJob: document.getElementById('personJob').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    address: document.getElementById('address').value,
+    website: document.getElementById('website').value,
+    companyName: document.getElementById('companyName').value,
+    slogan: document.getElementById('slogan').value,
+    primaryColor: document.getElementById('primaryColor').value,
+    secondaryColor: do

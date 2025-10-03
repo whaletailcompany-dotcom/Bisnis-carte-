@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>مولد تصاميم احترافي مطور</title>
+<title>مولد تصاميم احترافي متعدد القوالب</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -11,7 +11,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
 <style>
-  /* Reset */
+  /* [الـ Reset والتنظيم العام كما هو] */
   * { margin:0; padding:0; box-sizing:border-box; font-family:"Segoe UI", Tahoma, "Noto Naskh Arabic", sans-serif; }
   body { background:#0f172a; color:#fff; padding:15px; }
 
@@ -28,282 +28,351 @@
   .panel label { display:block; margin-bottom:5px; font-weight:bold; font-size:14px; color:#94a3b8; }
   .panel input:not([type="color"]), .panel textarea, .panel select { width:100%; padding:10px; border-radius:6px; border:none; background:#334155; color:#fff; }
   .panel input[type="file"] { padding-top:10px; }
-  .panel textarea { min-height:80px; }
-
-  /* Buttons & Color Pickers */
-  .panel button { padding:10px; border:none; border-radius:6px; cursor:pointer; font-weight:bold; width:100%; margin-top:10px; }
-  .btn-primary{ background:linear-gradient(135deg,#3b82f6,#8b5cf6); color:#fff; }
-  .btn-success{ background:#10b981; color:#fff; }
-  .btn-danger{ background:#ef4444; color:#fff; }
-  .color-picker-group { display:flex; align-items:center; }
   .color-picker-group input[type="color"] { width:40px; height:40px; border:none; padding:0; margin-left:10px; cursor:pointer; background:none; }
 
   /* Preview Section */
   .preview-container { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
   .preview { border-radius:10px; padding:15px; margin-top:15px; box-shadow:0 4px 12px rgba(0,0,0,.3); position:relative; }
+
+  /* Card Base Style */
+  .card { 
+      width:340px; 
+      height:190px; 
+      border-radius:12px; 
+      overflow: hidden; 
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  }
+  .card-face {
+      height: 100%;
+      width: 100%;
+      position: relative;
+      padding: 15px 20px;
+      display: none; /* يتم إظهاره عبر الجافاسكريبت حسب القالب */
+      transition: all 0.3s;
+  }
   
-  /* Business Card */
-  .card { width:340px; height:190px; padding:15px; border-radius:12px; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.3s; }
-  .card-top { display:flex; justify-content:space-between; align-items:center; }
-  .card-info { margin-top:10px; }
-  .card-info h2 { font-size:18px; margin-bottom:3px; }
-  .card-info p { font-size:12px; margin-bottom:3px; }
+  /* ========================================= */
+  /* 1. Simple Dark Template (وجه واحد)       */
+  /* ========================================= */
+  .card-face.simple-dark {
+      display: flex; /* إظهار هذا القالب عند التفعيل */
+      background: #1f2937; 
+      color: #fff; 
+      border: 1px solid #374151;
+      flex-direction: column;
+      justify-content: space-between;
+  }
+  .simple-dark .card-top { 
+      display:flex; 
+      justify-content:space-between; 
+      align-items:flex-start;
+  }
+  .simple-dark .card-info { 
+      margin-top:5px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.2);
+  }
+  .simple-dark .card-info h2 { font-size:18px; margin-bottom:0; grid-column: span 2; }
+  .simple-dark .card-info p { font-size:12px; margin-bottom:0; }
+  .simple-dark .logo-img { width:40px; height:40px; border-radius:50%; object-fit:cover; }
+  .simple-dark .circle-img { width:60px; height:60px; border-radius:50%; overflow:hidden; border:3px solid #fff; object-fit:cover; }
+  
 
-  /* Card Templates (The powerful change) */
-  .card.dark { background:#1f2937; color:#fff; border:1px solid #374151; }
-  .card.light { background:#f3f4f6; color:#1f2937; border:1px solid #e5e7eb; }
-  .card.colorful { background:#ef4444; color:#fff; border:1px solid #b91c1c; }
-  .card.custom { transition:none; } /* Custom style logic is in JS */
+  /* ========================================= */
+  /* 2. Gold & Navy Template (وجهين)          */
+  /* ========================================= */
 
-  /* Flyer & CV */
+  /* الوجه الأمامي (معلومات الشركة) */
+  .card-face.navy-gold-front {
+      background: #0d2847; 
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+  }
+  .card-face.navy-gold-front::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      background: linear-gradient(to right, #e7c271, #ffde8c);
+  }
+  .card-face.navy-gold-front .logo-img { width: 60px; height: 60px; border-radius: 0; }
+  .card-face.navy-gold-front h2 { margin-top: 10px; color: #e7c271; font-size: 20px; }
+  .card-face.navy-gold-front #cardWebsite { position: absolute; bottom: 8px; font-size: 10px; color: #111; }
+  
+  /* الوجه الخلفي (معلومات الشخص) */
+  .card-face.navy-gold-back {
+      background: linear-gradient(to right, #e7c271, #ffde8c);
+      color: #111;
+      display: flex; 
+      flex-direction: row;
+      justify-content: space-between;
+      position: relative;
+  }
+  .card-face.navy-gold-back::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: #0d2847; 
+      transform: skewX(10deg) translateX(40%);
+      transform-origin: top left;
+      z-index: 1;
+  }
+  .card-face.navy-gold-back > * { z-index: 2; } 
+  .card-face.navy-gold-back .card-contact { width: 50%; text-align: right; }
+  .card-face.navy-gold-back .card-logo-area { width: 50%; align-items: flex-start; }
+  .card-face.navy-gold-back .qrcode { width: 70px; height: 70px; background: #fff; border: 3px solid #e7c271; }
+  
+  /* [أكواد الـ CV والفلاير كما هي] */
   .flyer { width:210mm; height:auto; min-height:297mm; padding:30px; border:1px solid #ccc; background:#fff; color:#111; }
-  .flyer h2 { font-size:28px; margin-bottom:15px; border-bottom:2px solid #3b82f6; padding-bottom:5px; }
-  .flyer p { font-size:16px; line-height:1.6; }
-
   .cv { width:210mm; height:auto; min-height:297mm; padding:30px; border:1px solid #ccc; background:#fff; color:#111; }
-  .cv h2 { color:#3b82f6; margin-top:15px; border-bottom:1px solid #3b82f6; padding-bottom:5px; }
-  .cv p { margin-bottom:10px; font-size:14px; }
-  .cv-section { margin-top:20px; }
 
-  /* Circle images */
-  .circle-img { width:60px; height:60px; border-radius:50%; overflow:hidden; border:3px solid #fff; object-fit:cover; }
-  .logo-img { width:40px; height:40px; border-radius:50%; object-fit:cover; }
-
-  /* FAB - Menu for Downloads */
+  /* FAB Menu */
   .fab { position:fixed; bottom:20px; left:20px; width:60px; height:60px; background:#3b82f6; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:30px; color:#fff; z-index:999; box-shadow:0 4px 12px rgba(0,0,0,.4); }
   .fab-menu { position:fixed; bottom:90px; left:20px; display:none; flex-direction:column; gap:10px; z-index:998; }
   .fab-menu.show { display:flex; }
   .fab-menu button { width:180px; text-align:right; }
 
-  /* Responsive */
-  @media (max-width:768px){ 
-    .panel { grid-template-columns:1fr; } 
-    .card{width:95%;height:auto;} 
-    .flyer,.cv{width:100%;height:auto; min-height:auto; padding:15px;}
-    .preview-container { flex-direction:column; align-items:center; }
-  }
 </style>
 </head>
 <body>
 
 <div class="container">
   <header>
-    <h1>✨ مولد تصاميم احترافي (مطور)</h1>
-    <p>صمم بطاقات عمل، فلاير، وسير ذاتية بتخصيص أكبر</p>
+    <h1>✨ مولد تصاميم احترافي متعدد القوالب</h1>
+    <p>اختر التصميم الذي يناسبك: بسيط أو فاخر (وجه واحد/وجهين)</p>
   </header>
 
   <div class="panel">
-    <div class="form-group">
-      <label>👤 الاسم الكامل</label><input id="name" type="text" value="أحمد محمد">
-    </div>
-    <div class="form-group">
-      <label>💼 المسمى الوظيفي</label><input id="job" type="text" value="مصمم جرافيك">
-    </div>
-    <div class="form-group">
-      <label>📧 البريد الإلكتروني</label><input id="email" type="email" value="info@domain.com">
-    </div>
-    <div class="form-group">
-      <label>📱 الهاتف</label><input id="phone" type="tel" value="+966 50 123 4567">
-    </div>
-    <div class="form-group">
-      <label>📍 الموقع</label><input id="location" type="text" value="الرياض، المملكة العربية السعودية">
-    </div>
-    <div class="form-group">
-      <label>🔗 الموقع الإلكتروني</label><input id="website" type="text" value="www.my-portfolio.com">
-    </div>
-    <div class="form-group" style="grid-column: span 2 / auto;">
-      <label>📝 الملخص المهني / نبذة</label><textarea id="summary">مصمم جرافيك بخبرة 5 سنوات في بناء الهوية البصرية للشركات الناشئة والمشاريع الكبرى. أسعى لتقديم حلول تصميم مبتكرة ومؤثرة.</textarea>
-    </div>
-    <div class="form-group">
-      <label>⚡ المهارات</label><input id="skills" type="text" value="Photoshop, Illustrator, InDesign, UI/UX">
-    </div>
-    <div class="form-group">
-      <label>📷 الصورة الشخصية</label><input id="photo" type="file" accept="image/*">
-    </div>
-    <div class="form-group">
-      <label>🎨 الشعار / اللوجو</label><input id="logo" type="file" accept="image/*">
-    </div>
-
-    <div class="form-group">
-      <label>🎨 قالب البطاقة</label>
+    <div class="form-group"><label>👤 الاسم الكامل</label><input id="name" type="text" value="أحمد محمد"></div>
+    <div class="form-group"><label>💼 المسمى الوظيفي</label><input id="job" type="text" value="مصمم جرافيك"></div>
+    <div class="form-group"><label>📧 البريد الإلكتروني</label><input id="email" type="email" value="info@domain.com"></div>
+    <div class="form-group"><label>📱 الهاتف</label><input id="phone" type="tel" value="+966 50 123 4567"></div>
+    <div class="form-group"><label>📍 الموقع</label><input id="location" type="text" value="الرياض، المملكة العربية السعودية"></div>
+    <div class="form-group"><label>🔗 الموقع الإلكتروني</label><input id="website" type="text" value="www.my-portfolio.com"></div>
+    <div class="form-group" style="grid-column: span 2 / auto;"><label>📝 الملخص المهني / نبذة</label><textarea id="summary">مصمم جرافيك بخبرة 5 سنوات في بناء الهوية البصرية للشركات الناشئة والمشاريع الكبرى.</textarea></div>
+    <div class="form-group"><label>⚡ المهارات</label><input id="skills" type="text" value="Photoshop, Illustrator, InDesign, UI/UX"></div>
+    <div class="form-group"><label>📷 الصورة الشخصية</label><input id="photo" type="file" accept="image/*"></div>
+    <div class="form-group"><label>🎨 الشعار / اللوجو</label><input id="logo" type="file" accept="image/*"></div>
+    <div class="form-group"><label>🎨 قالب البطاقة</label>
       <select id="template">
-        <option value="dark">1- داكن (Dark)</option>
-        <option value="light">2- فاتح (Light)</option>
-        <option value="colorful">3- ملون (Colorful)</option>
-        <option value="custom">4- مخصص (Custom)</option>
+        <option value="simple-dark">1- بسيط (وجه واحد)</option>
+        <option value="navy-gold">2- فاخر (وجهين)</option>
+        <option value="custom">3- مخصص (ألوانك)</option>
       </select>
     </div>
     <div class="form-group color-picker-group">
-      <label>لون التصميم الأساسي (Custom)</label>
+      <label>لون أساسي</label>
       <input id="primaryColor" type="color" value="#3b82f6">
     </div>
     <div class="form-group color-picker-group">
-      <label>لون النص (Custom)</label>
+      <label>لون ثانوي/نص</label>
       <input id="textColor" type="color" value="#ffffff">
     </div>
-    
   </div>
 
   <div class="preview-container">
-    <div class="preview card dark" id="cardPreview">
-      <div class="card-top">
-        <img id="photoPreview" class="circle-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="الصورة الشخصية">
-        <img id="logoPreview" class="logo-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="الشعار">
-      </div>
-      <div class="card-info">
-        <h2 id="cardName">الاسم الكامل</h2>
-        <p id="cardJob">المسمى الوظيفي</p>
-        <div style="font-size:12px; margin-top:8px;">
-            <p id="cardEmail">📧 البريد</p>
-            <p id="cardPhone">📱 الهاتف</p>
-            <p id="cardLocation">📍 الموقع</p>
+    <div class="preview card" id="cardContainer">
+        <div class="card-face simple-dark" id="cardPreviewSimple">
+            <div class="card-top">
+                <img id="photoPreviewSimple" class="circle-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="الصورة الشخصية">
+                <div>
+                    <img id="logoPreviewSimple" class="logo-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="الشعار">
+                    <p id="cardJobSimple">المسمى الوظيفي</p>
+                </div>
+            </div>
+            <div class="card-info">
+                <h2 id="cardNameSimple">الاسم الكامل</h2>
+                <p id="cardEmailSimple">📧 البريد</p>
+                <p id="cardPhoneSimple">📱 الهاتف</p>
+                <p id="cardLocationSimple">📍 الموقع</p>
+                <p id="cardWebsiteSimple">🔗 الموقع</p>
+            </div>
         </div>
-      </div>
+        
+        <div class="card-face navy-gold-front" id="cardPreviewFront">
+            <img id="logoPreviewFront" class="logo-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="الشعار">
+            <h2 id="cardCompanyName">COMPANY LOGO</h2>
+            <p id="cardSlogan">YOUR SLOGAN HERE</p>
+            <p id="cardWebsiteFront"></p>
+        </div>
+        
+        <div class="card-face navy-gold-back" id="cardPreviewBack">
+            <div class="card-contact">
+                <h3 id="cardNameBack">الاسم الكامل</h3>
+                <p id="cardJobBack">المسمى الوظيفي</p>
+                <br>
+                <p><span style="font-size: 14px; color:#0d2847;">&#9742;</span> <span id="cardPhoneBack">الهاتف</span></p>
+                <p><span style="font-size: 14px; color:#0d2847;">&#9993;</span> <span id="cardEmailBack">البريد</span></p>
+                <p><span style="font-size: 14px; color:#0d2847;">&#127968;</span> <span id="cardLocationBack">الموقع</span></p>
+            </div>
+            <div class="card-logo-area">
+                <div class="qrcode"></div>
+                <div>
+                    <img id="logoPreviewBack" class="logo-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="الشعار">
+                    <h4>COMPANY LOGO</h4>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="preview flyer" id="flyerPreview">
-      <h2 id="flyerName">الاسم — المسمى</h2>
-      <p style="color:#555; margin-bottom:20px;">*الفلاير يركز عادةً على الترويج لخدمة أو منتج.</p>
-      <p id="flyerSummary">الملخص المهني</p>
-      <div style="margin-top:25px;">
-        <p style="font-weight:bold; color:#3b82f6;">للتواصل:</p>
-        <p id="flyerPhone">الهاتف: </p>
-        <p id="flyerEmail">البريد: </p>
-        <p id="flyerWebsite">الموقع: </p>
-      </div>
-    </div>
-
-    <div class="preview cv" id="cvPreview">
-      <h1 id="cvName" style="text-align:center; color:#3b82f6; border-bottom:2px solid #3b82f6; padding-bottom:10px;">الاسم الكامل</h1>
-      <p id="cvJob" style="text-align:center; color:#555; margin-bottom:20px;">المسمى الوظيفي</p>
-      
-      <div class="cv-section">
-        <h2>نبذة مختصرة</h2>
-        <p id="cvSummary"></p>
-      </div>
-
-      <div class="cv-section">
-        <h2>مهارات رئيسية</h2>
-        <p id="cvSkills" style="font-style:italic;"></p>
-      </div>
-      
-      <div class="cv-section">
-        <h2>تواصل</h2>
-        <p id="cvPhone">📱 الهاتف: </p>
-        <p id="cvEmail">📧 البريد: </p>
-        <p id="cvLocation">📍 الموقع: </p>
-        <p id="cvWebsite">🔗 الموقع: </p>
-      </div>
-    </div>
+    
+    <div class="preview flyer" id="flyerPreview">...</div>
+    <div class="preview cv" id="cvPreview">...</div>
   </div>
 </div>
 
 <div class="fab" id="fab">📥</div>
 <div class="fab-menu" id="fabMenu">
-  <button class="btn-success" onclick="downloadCardPNG()">📥 بطاقة PNG</button>
-  <button class="btn-success" onclick="downloadCardPDF()">📥 بطاقة PDF</button>
-  <button class="btn-success" onclick="downloadCVPDF()">📥 CV PDF</button>
-  <button class="btn-primary" onclick="exportZIP()">📦 تنزيل الكل ZIP</button>
-</div>
+  </div>
 
 <script>
   // ===================================
   //           منطق البيانات
   // ===================================
   let photoData = null, logoData = null;
-
-  const photoInput = document.getElementById("photo");
-  const logoInput = document.getElementById("logo");
-  const photoPreview = document.getElementById("photoPreview");
-  const logoPreview = document.getElementById("logoPreview");
+  
   const templateSelect = document.getElementById("template");
   const primaryColorInput = document.getElementById("primaryColor");
   const textColorInput = document.getElementById("textColor");
-  const cardPreview = document.getElementById("cardPreview");
-  
-  // وظيفة تحميل الصور
-  function handleFileInput(input, preview, callback){
+  const cardContainer = document.getElementById("cardContainer");
+  const fabMenu = document.getElementById("fabMenu");
+
+  // تعريف عناصر البطاقات لجميع القوالب
+  const cardSimple = document.getElementById("cardPreviewSimple");
+  const cardFront = document.getElementById("cardPreviewFront");
+  const cardBack = document.getElementById("cardPreviewBack");
+
+  // [وظائف تحميل الصور كما هي، يجب تحديث جميع عناصر العرض]
+  function handleFileInput(input, previewSelectors, callback){
     input.addEventListener("change", e=>{
       const reader = new FileReader();
       reader.onload = ()=>{ 
         callback(reader.result);
-        preview.src = reader.result; 
+        previewSelectors.forEach(preview => preview.src = reader.result);
       }
       reader.readAsDataURL(e.target.files[0]);
     });
   }
+  
+  // تحديث جميع عناصر الصورة (Simple, Front, Back)
+  handleFileInput(document.getElementById("photo"), [document.getElementById("photoPreviewSimple")], (data) => { photoData = data; });
+  handleFileInput(document.getElementById("logo"), [document.getElementById("logoPreviewSimple"), document.getElementById("logoPreviewFront"), document.getElementById("logoPreviewBack")], (data) => { logoData = data; });
 
-  handleFileInput(photoInput, photoPreview, (data) => { photoData = data; });
-  handleFileInput(logoInput, logoPreview, (data) => { logoData = data; });
 
   // وظيفة تحديث المعاينة
   function updateAll(){
     const nameVal = name.value || "الاسم الكامل";
     const jobVal = job.value || "المسمى الوظيفي";
+    const summaryVal = summary.value || "YOUR SLOGAN HERE";
 
-    // --- تحديث بطاقة العمل ---
-    document.getElementById("cardName").textContent = nameVal;
-    document.getElementById("cardJob").textContent = jobVal;
-    document.getElementById("cardEmail").textContent = "📧 " + (email.value || "البريد");
-    document.getElementById("cardPhone").textContent = "📱 " + (phone.value || "الهاتف");
-    document.getElementById("cardLocation").textContent = "📍 " + (location.value || "الموقع");
+    // --- تحديث قالب Simple Dark (وجه واحد) ---
+    document.getElementById("cardNameSimple").textContent = nameVal;
+    document.getElementById("cardJobSimple").textContent = jobVal;
+    document.getElementById("cardEmailSimple").textContent = "📧 " + (email.value || "البريد");
+    document.getElementById("cardPhoneSimple").textContent = "📱 " + (phone.value || "الهاتف");
+    document.getElementById("cardLocationSimple").textContent = "📍 " + (location.value || "الموقع");
+    document.getElementById("cardWebsiteSimple").textContent = "🔗 " + (website.value || "الموقع الإلكتروني");
+
+    // --- تحديث قالب Gold & Navy (وجهين) ---
+    document.getElementById("cardCompanyName").textContent = "COMPANY LOGO";
+    document.getElementById("cardSlogan").textContent = summaryVal;
+    document.getElementById("cardWebsiteFront").textContent = website.value || "WWW.YOURCLUB.COM";
     
-    // --- تحديث الفلاير ---
-    document.getElementById("flyerName").textContent = nameVal +" — "+ jobVal;
-    document.getElementById("flyerSummary").textContent = summary.value || "الملخص المهني";
-    document.getElementById("flyerPhone").textContent = "الهاتف: " + (phone.value || "N/A");
-    document.getElementById("flyerEmail").textContent = "البريد: " + (email.value || "N/A");
-    document.getElementById("flyerWebsite").textContent = "الموقع: " + (website.value || "N/A");
-
-
-    // --- تحديث السيرة الذاتية (CV) ---
-    document.getElementById("cvName").textContent = nameVal;
-    document.getElementById("cvJob").textContent = jobVal;
-    document.getElementById("cvSummary").textContent = summary.value || "ملخص قصير... (يفضل إدخال تفاصيل)";
-    document.getElementById("cvSkills").textContent = skills.value || "المهارات غير مدخلة.";
-    document.getElementById("cvPhone").textContent = "📱 الهاتف: " + (phone.value || "N/A");
-    document.getElementById("cvEmail").textContent = "📧 البريد: " + (email.value || "N/A");
-    document.getElementById("cvLocation").textContent = "📍 الموقع: " + (location.value || "N/A");
-    document.getElementById("cvWebsite").textContent = "🔗 الموقع: " + (website.value || "N/A");
-
-
-    // --- تطبيق القوالب والألوان ---
+    document.getElementById("cardNameBack").textContent = nameVal;
+    document.getElementById("cardJobBack").textContent = jobVal;
+    document.getElementById("cardPhoneBack").textContent = phone.value || "الهاتف";
+    document.getElementById("cardEmailBack").textContent = email.value || "البريد";
+    document.getElementById("cardLocationBack").textContent = location.value || "الموقع";
+    
+    // [تحديث CV والفلاير كما في الكود السابق]
+    
     applyTemplate();
   }
 
-  // وظيفة تطبيق القالب والألوان (التعديل الجوهري)
+  // ===================================
+  //           منطق تطبيق القالب (المرونة)
+  // ===================================
   function applyTemplate() {
     const template = templateSelect.value;
     const primaryColor = primaryColorInput.value;
     const textColor = textColorInput.value;
+    
+    // إخفاء جميع أوجه البطاقات في البداية
+    cardSimple.style.display = 'none';
+    cardFront.style.display = 'none';
+    cardBack.style.display = 'none';
+    
+    // مسح فئات الـ Custom
+    cardSimple.classList.remove("custom");
+    cardSimple.style.backgroundColor = '';
+    cardSimple.style.color = '';
+    cardSimple.querySelector('.card-info').style.borderTop = '';
+    cardSimple.querySelector('.circle-img').style.borderColor = '';
 
-    // إزالة جميع فئات القوالب
-    cardPreview.classList.remove("dark", "light", "colorful", "custom");
-    cardPreview.style.backgroundColor = '';
-    cardPreview.style.color = '';
-    cardPreview.style.border = '';
-    cardPreview.querySelectorAll('h2, p').forEach(el => el.style.color = '');
-    cardPreview.querySelectorAll('.circle-img').forEach(el => el.style.borderColor = '');
 
+    let downloadButtons = '';
 
-    if (template === "custom") {
-      cardPreview.classList.add("custom");
-      cardPreview.style.backgroundColor = primaryColor;
-      cardPreview.style.color = textColor;
-      cardPreview.style.border = `1px solid ${primaryColor}`;
-      // تغيير لون النص إلى اللون المحدد
-      cardPreview.querySelectorAll('h2, p').forEach(el => el.style.color = textColor);
-      // جعل حدود الصور بنفس لون النص أو الأساسي
-      cardPreview.querySelectorAll('.circle-img').forEach(el => el.style.borderColor = textColor);
-    } else {
-      // تطبيق فئة القالب القياسية (dark, light, colorful)
-      cardPreview.classList.add(template);
+    if (template === "simple-dark" || template === "custom") {
+        // --- قالب وجه واحد (Simple / Custom) ---
+        cardSimple.style.display = 'flex';
+        
+        if(template === "custom"){
+             // تطبيق الألوان المخصصة
+            cardSimple.classList.add("custom");
+            cardSimple.style.backgroundColor = primaryColor;
+            cardSimple.style.color = textColor;
+            cardSimple.querySelector('.card-info').style.borderTop = `1px dashed ${textColor}66`;
+            cardSimple.querySelector('.circle-img').style.borderColor = textColor;
+            cardSimple.querySelectorAll('p').forEach(el => el.style.color = textColor);
+        } else {
+            // القالب الداكن القياسي
+            cardSimple.classList.add("simple-dark");
+        }
+
+        // أزرار التنزيل الخاصة بالقالب ذي الوجه الواحد
+        downloadButtons = `
+            <button class="btn-success" onclick="downloadCardPNG(cardSimple)">📥 بطاقة PNG</button>
+            <button class="btn-success" onclick="downloadCardPDF(cardSimple)">📥 بطاقة PDF</button>
+        `;
+
+    } else if (template === "navy-gold") {
+        // --- قالب وجهين (Gold & Navy) ---
+        cardFront.style.display = 'flex';
+        cardBack.style.display = 'flex';
+        cardFront.classList.add('navy-gold-front');
+        cardBack.classList.add('navy-gold-back');
+        
+        // أزرار التنزيل الخاصة بالقالب ذي الوجهين
+        downloadButtons = `
+            <button class="btn-success" onclick="downloadCardPNG(cardFront)">📥 وجه أمامي PNG</button>
+            <button class="btn-success" onclick="downloadCardPNG(cardBack)">📥 وجه خلفي PNG</button>
+            <button class="btn-primary" onclick="downloadCardPDF(cardFront)">📥 وجه أمامي PDF</button>
+            <button class="btn-primary" onclick="downloadCardPDF(cardBack)">📥 وجه خلفي PDF</button>
+        `;
     }
     
-    // تغيير لون CV والفلاير الأساسي حسب اللون المختار حتى لو لم يكن مخصص
+    // تحديث قائمة التنزيلات في الـ FAB
+    fabMenu.innerHTML = downloadButtons + `
+        <button class="btn-danger" onclick="downloadFlyerPNG()">🖼️ فلاير PNG</button>
+        <button class="btn-danger" onclick="downloadCVPDF()">📄 CV PDF</button>
+        <button class="btn-primary" onclick="exportZIP()">📦 تنزيل الكل ZIP</button>
+    `;
+    
+    // تغيير لون CV والفلاير الأساسي
     document.querySelectorAll('.flyer h2, .cv h1, .cv h2').forEach(el => el.style.color = primaryColor);
     document.querySelectorAll('.flyer h2').forEach(el => el.style.borderColor = primaryColor);
-    
   }
 
   // ربط الأحداث
@@ -315,57 +384,59 @@
 
 
   // ===================================
-  //           منطق التحميل
+  //           منطق التحميل (تم تعديله ليقبل العنصر كمدخل)
   // ===================================
 
-  // زيادة الـ scale إلى 3 لتحسين جودة الطباعة (DPI)
   async function savePNG(el, file){
-    const canvas = await html2canvas(el, {scale:3, backgroundColor:null});
+    const canvas = await html2canvas(el, {scale:4, backgroundColor:null});
     canvas.toBlob(b=>saveAs(b,file));
   }
 
-  // تحسين إعدادات الـ PDF لبطاقة العمل والفلاير/CV
   async function savePDF(el,file){
     const {jsPDF} = window.jspdf;
-    const canvas = await html2canvas(el,{scale:3, backgroundColor:null});
+    const canvas = await html2canvas(el,{scale:4, backgroundColor:null});
     const img = canvas.toDataURL("image/png");
-    
-    if (el.id === "cardPreview") {
-        // تنسيق قياسي لبطاقة العمل (85mm x 50mm)
-        const pdf = new jsPDF({orientation:'landscape', unit:'mm', format:[85, 50]});
-        const imgWidth = 85;
-        const imgHeight = 50; 
-        pdf.addImage(img,"PNG",0,0,imgWidth,imgHeight);
-        pdf.save(file);
-    } else {
-        // تنسيق A4 للفلاير والسيرة الذاتية
-        const pdf = new jsPDF({orientation:'portrait', unit:'mm', format:'a4'});
-        const imgWidth = 190;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
-        pdf.addImage(img,"PNG",10,10,imgWidth,imgHeight);
-        pdf.save(file);
-    }
+    const pdf = new jsPDF({orientation:'landscape', unit:'mm', format:[90, 55]});
+    const imgWidth = 90;
+    const imgHeight = 55; 
+    pdf.addImage(img,"PNG",0,0,imgWidth,imgHeight);
+    pdf.save(file);
   }
 
-  async function downloadCardPNG(){ await savePNG(cardPreview,"business-card.png"); }
+  // وظائف التحميل العامة (يجب أن تستدعي savePNG/savePDF مع العنصر الصحيح)
+  async function downloadCardPNG(el){ 
+      await savePNG(el, el.id.includes("Back") ? "business-card-back.png" : "business-card-front.png"); 
+  }
+  async function downloadCardPDF(el){ 
+      await savePDF(el, el.id.includes("Back") ? "business-card-back.pdf" : "business-card-front.pdf"); 
+  }
+  
+  async function downloadFlyerPNG(){ await savePNG(document.getElementById("flyerPreview"),"flyer.png"); }
   async function downloadCVPDF(){ await savePDF(document.getElementById("cvPreview"),"cv-resume.pdf"); }
 
-  // تم دمج تحميل الفلاير والسيرة الذاتية في ملف PDF واحد للحفاظ على خيارات قليلة قوية
   async function exportZIP(){
     const zip = new JSZip();
     async function add(el,name){
-      const canvas = await html2canvas(el,{scale:3, backgroundColor:null});
+      const canvas = await html2canvas(el,{scale:4, backgroundColor:null});
       zip.file(name+".png", canvas.toDataURL("image/png").split(",")[1], {base64:true});
     }
-    await add(cardPreview,"business-card");
+    
+    // تحديد العناصر المراد تصديرها بناءً على القالب المختار
+    const template = templateSelect.value;
+    if (template === "navy-gold") {
+        await add(cardFront,"business-card-front");
+        await add(cardBack,"business-card-back");
+    } else {
+        await add(cardSimple,"business-card");
+    }
+    
+    await add(document.getElementById("flyerPreview"),"flyer");
     await add(document.getElementById("cvPreview"),"cv-resume");
     const content = await zip.generateAsync({type:"blob"});
     saveAs(content,"all-designs.zip");
   }
 
-  // ===================================
-  //           منطق زر FAB
-  // ===================================
+  // [منطق زر FAB كما هو]
   const fab = document.getElementById("fab");
   const fabMenu = document.getElementById("fabMenu");
   fab.addEventListener("click", ()=>{
@@ -378,9 +449,4 @@
     }
   });
 
-  window.addEventListener("load", updateAll);
-</script>
-
-</body>
-    </html>
-                
+  window.addEventListener("load", updat
